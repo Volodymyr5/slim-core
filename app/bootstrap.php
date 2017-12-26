@@ -29,8 +29,8 @@ $container['view'] = function ($container) {
 };
 
 // Binding Controllers to routes
-$container['Index\IndexController'] = function ($container) {
-    return new \App\Controllers\Index\IndexController($container);
-};
+//$container['Index\IndexController'] = function ($container) {
+//    return new \App\Controllers\Index\IndexController($container);
+//};
 
 require __DIR__ . '/routes/index.php';

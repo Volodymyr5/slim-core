@@ -13,4 +13,11 @@ class IndexController extends CoreController
     {
         return $this->view->render($response, 'index\index.twig');
     }
+
+    public function test($request, $response, $args)
+    {
+        var_dump($args);
+
+        //return $this->view->render($response, 'index\index.twig');
+    }
 }
