@@ -8,29 +8,19 @@ require __DIR__ . '/vendor/autoload.php';
 $app = new \Slim\App([
     'settings' => [
         'displayErrrorDetails' => true,
+        'debug' => true,
+        'whoops.editor' => 'sublime',
     ],
 ]);
 
-// Get dependency injection container
+// Get dependency injection Container
 $container = $app->getContainer();
 
-// Inject Slim-Twig
-$container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig(__DIR__ . '/views', [
-        'cache' => false,
-    ]);
+// Fill requirements in Container
+require __DIR__ . '/src/dependencies.php';
 
-    $view->addExtension(new \Slim\Views\TwigExtension(
-        $container->router,
-        $container->request->getUri()
-    ));
+// Add Middleware
+require __DIR__ . '/src/middleware.php';
 
-    return $view;
-};
-
-// Binding Controllers to routes
-//$container['Index\IndexController'] = function ($container) {
-//    return new \App\Controllers\Index\IndexController($container);
-//};
-
+// Add routes
 require __DIR__ . '/routes/index.php';

@@ -1,5 +1,4 @@
 <?php
 
-//$app->get('/', 'Index\IndexController:index');
-$app->get('/', \App\Controllers\Index\IndexController::class . ':index');
-$app->get('/test/{id}', \App\Controllers\Index\IndexController::class . ':test');
+$app->get('/', \App\Controllers\Index\IndexController::class . ':index')->setName('home');
+$app->get('/test/{id}', \App\Controllers\Index\IndexController::class . ':test')->setName('test');
