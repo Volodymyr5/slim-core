@@ -40,3 +40,27 @@ $container['view'] = function ($container) {
 
     return $view;
 };
+
+// Inject ZF2 form bulider and validator
+$smConfigurator = new \App\Config\ServiceManagerConfigurator();
+$containerServiceManager = $smConfigurator->createServiceManager([]);
+$container['serviceManager'] = $containerServiceManager;
+
+// Set up Twig fallback function
+$viewHelperManager = $containerServiceManager->get('ViewHelperManager');
+$renderer = new \Zend\View\Renderer\PhpRenderer();
+$renderer->setHelperPluginManager($viewHelperManager);
+
+$view = $container['view'];
+
+$view->getEnvironment()->registerUndefinedFunctionCallback(
+    function ($name) use ($viewHelperManager, $renderer) {
+        if (!$viewHelperManager->has($name)) {
+            return false;
+        }
+        $callable = [$renderer->plugin($name), '__invoke'];
+        $options = ['is_safe' => ['html']];
+
+        return new \Twig_SimpleFunction($name, $callable, $options);
+    }
+);

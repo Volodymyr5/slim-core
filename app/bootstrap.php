@@ -5,8 +5,8 @@ session_start();
 require __DIR__ . '/vendor/autoload.php';
 
 // App settings
-$customSettings = require_once __DIR__ . '/config/settings.php';
-$localSettings = require_once __DIR__ . '/config/local.php';
+$customSettings = require_once __DIR__ . '/Config/settings.php';
+$localSettings = require_once __DIR__ . '/Config/local.php';
 $customSettings = array_merge($customSettings, $localSettings);
 
 // Slim app instance

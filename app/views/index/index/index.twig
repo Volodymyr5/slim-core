@@ -6,7 +6,13 @@
 
             index / index / index . twig
 
-            {{ csrf_tokens() | raw }}
+            <form method="POST" role="form" class="uk-width-1-4">
+                {{ csrf_tokens() | raw }}
+                <div class="uk-margin">
+                    {{ formRow(form.get('email')) }}
+                </div>
+                {{ formElement(form.get('submit')) }}
+            </form>
 
         </div>
     </div>
