@@ -38,6 +38,3 @@ switch ($dbType) {
         throw new \Exception('Error. Wrong Data Base connection!');
 }
 
-if ($dbType) {
-    //Model::$auto_prefix_models = '\\App\\Models\\';
-}

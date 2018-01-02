@@ -1,7 +1,13 @@
 {% extends 'layout/main.twig' %}
 
 {% block content %}
-    index / index / index . twig
+    <div class="uk-section uk-padding-remove-vertical">
+        <div class="uk-container uk-container-expand">
 
-    {{ csrf_tokens() | raw }}
+            index / index / index . twig
+
+            {{ csrf_tokens() | raw }}
+
+        </div>
+    </div>
 {% endblock %}

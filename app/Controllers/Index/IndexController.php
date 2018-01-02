@@ -13,7 +13,7 @@ class IndexController extends CoreController
 {
     public function index($request, $response)
     {
-        $users = User::findMany();
+        $users = User::count();
 
         var_dump($users);
 

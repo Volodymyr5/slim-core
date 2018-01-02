@@ -6,7 +6,12 @@
     "slim/slim": "^3.0",
     "slim/twig-view": "^2.3",
     "slim/csrf": "^0.8.2",
-    "j4mie/paris": "^1.5"
+    "j4mie/paris": "^1.5",
+    "zendframework/zend-form": "2.*",
+    "zendframework/zend-servicemanager": "2.*",
+    "zendframework/zend-i18n": "2.*",
+    "zendframework/zend-view": "2.*",
+    "zendframework/zend-escaper": "2.*"
   },
   "autoload": {
     "psr-4": {
