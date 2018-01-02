@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controllers\Index;
+namespace App\Controllers\Auth;
 
 use \App\Controllers\CoreController;
 use App\Models\User;
 
 /**
  * Class IndexController
- * @package App\Controllers\Index
+ * @package App\Controllers\Auth
  */
 class IndexController extends CoreController
 {
@@ -42,20 +42,5 @@ class IndexController extends CoreController
         return $this->view->render($response, 'index\index\index.twig', [
             'form' => $form
         ]);
-    }
-
-    public function register($request, $response)
-    {
-
-    }
-
-    public function logout($request, $response)
-    {
-
-    }
-
-    public function confirm($request, $response)
-    {
-
     }
 }
