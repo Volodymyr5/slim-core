@@ -4,7 +4,10 @@ session_start();
 // Composer autoload
 require __DIR__ . '/vendor/autoload.php';
 
-$customSettings = require_once __DIR__ . '/settings.php';
+// App settings
+$customSettings = require_once __DIR__ . '/config/settings.php';
+$localSettings = require_once __DIR__ . '/config/local.php';
+$customSettings = array_merge($customSettings, $localSettings);
 
 // Slim app instance
 $app = new \Slim\App([
