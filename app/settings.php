@@ -7,11 +7,11 @@ return [
             'file_path' => __DIR__ . '/db/core.db',
         ],
         // MySql
-//        'mysql' => [
-//            'host' => 'localhost',
-//            'dbname' => 'my_database',
-//            'username' => 'root',
-//            'password' => '',
-//        ],
+        /*'mysql' => [
+            'host' => 'localhost',
+            'dbname' => 'dbname',
+            'username' => 'username',
+            'password' => 'password',
+        ],*/
     ]
 ];
