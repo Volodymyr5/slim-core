@@ -3,6 +3,8 @@
 namespace App\Controllers\Index;
 
 use \App\Controllers\CoreController;
+use App\Models\User;
+
 /**
  * Class IndexController
  * @package App\Controller
@@ -11,7 +13,9 @@ class IndexController extends CoreController
 {
     public function index($request, $response)
     {
-        //var_dump($this->csrf->getTokenNameKey());
+        $users = User::findMany();
+
+        var_dump($users);
 
         return $this->view->render($response, 'index\index\index.twig');
     }

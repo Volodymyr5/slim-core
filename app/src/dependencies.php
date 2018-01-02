@@ -5,7 +5,7 @@ $container['csrf'] = function ($container) {
     return new \Slim\Csrf\Guard;
 };
 
-$container['errorHandler'] = function ($container) {
+/*$container['errorHandler'] = function ($container) {
     return function ($request, $response, $exception) use ($container) {
         $message = '<h1>Slim Application Error</h1><p>A website error has occurred. Sorry for the temporary inconvenience.</p>';
         $message .= '<p>' . $exception->getMessage() . '</p>';
@@ -15,7 +15,11 @@ $container['errorHandler'] = function ($container) {
             ->withHeader('Content-Type', 'text/html')
             ->write($message);
     };
-};
+};*/
+
+// Disable Slim Error handler
+unset($container['errorHandler']);
+unset($container['phpErrorHandler']);
 
 // Inject Slim-Twig
 $container['view'] = function ($container) {
