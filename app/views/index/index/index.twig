@@ -3,5 +3,5 @@
 {% block content %}
     index / index / index . twig
 
-    {{ csrf_tokens() }}
+    {{ csrf_tokens() | raw }}
 {% endblock %}

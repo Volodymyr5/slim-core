@@ -31,6 +31,7 @@ $container['view'] = function ($container) {
         $container->request->getUri()
     ));
 
+    // Twig view helpers
     require __DIR__ . '/twig_functions.php';
 
     return $view;

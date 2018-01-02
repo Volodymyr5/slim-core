@@ -11,6 +11,8 @@ class IndexController extends CoreController
 {
     public function index($request, $response)
     {
+        //var_dump($this->csrf->getTokenNameKey());
+
         return $this->view->render($response, 'index\index\index.twig');
     }
 
