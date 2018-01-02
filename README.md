@@ -74,7 +74,7 @@ In `app/Models/` create class:
 namespace App\Models;
 
 /**
- * Class <Class name>
+ * Class ClassName
  * @package App\Models
  */
 class ClassName extends CoreModel {
