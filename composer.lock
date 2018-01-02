@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "590feb0dfa5d59572baed9851f50dfee",
-    "content-hash": "ec33318b596cbb62fd383dbfefc07bc5",
+    "hash": "d48661ccc0d02e1e17bd018f4fe56bef",
+    "content-hash": "57484bcd95012148586fabc286bd2026",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -631,6 +631,43 @@
                 "shim"
             ],
             "time": "2017-10-11 12:05:26"
+        },
+        {
+            "name": "travis/ex",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swt83/php-ex.git",
+                "reference": "16a500a8b5f29d070a39f6a2ea7f1ff3950250e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swt83/php-ex/zipball/16a500a8b5f29d070a39f6a2ea7f1ff3950250e4",
+                "reference": "16a500a8b5f29d070a39f6a2ea7f1ff3950250e4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/ex.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Scott Travis",
+                    "email": "scott.w.travis@gmail.com"
+                }
+            ],
+            "description": "A PHP function to safely extract information from a multi-dimensional object or array.",
+            "homepage": "https://github.com/swt83/php-ex",
+            "time": "2017-02-14 17:53:38"
         },
         {
             "name": "twig/twig",

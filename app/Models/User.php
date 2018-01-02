@@ -10,7 +10,4 @@ namespace App\Models;
  * @property string $email
  * @property string $password
  */
-class User extends CoreModel
-{
-
-}
+class User extends CoreModel {}

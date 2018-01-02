@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Libs\SMTP;
 
 /**
  * Class CoreController
@@ -39,11 +40,33 @@ class CoreController
      * @param $formNameWithNamespace
      * @return \Zend\Form\FormInterface
      */
-    public function getForm($formNameWithNamespace)
+    protected function getForm($formNameWithNamespace)
     {
         $containerServiceManager = $this->container['serviceManager'];
         $formElementManager = $containerServiceManager->get('FormElementManager');
 
         return $formElementManager->get($formNameWithNamespace);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getConfig()
+    {
+        return isset($this->container->settings['custom']) ? $this->container->settings['custom'] : [];
+    }
+
+    /**
+     * @return SMTP|bool
+     */
+    protected function getMailer()
+    {
+        $config = $this->getConfig();
+
+        if (isset($config['smtp']['connections'])) {
+            return new SMTP($config['smtp']);
+        } else {
+            return false;
+        }
     }
 }

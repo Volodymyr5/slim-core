@@ -28,6 +28,17 @@ class IndexController extends CoreController
 
         var_dump($users);
 
+        /*$mailer = $this->getMailer();
+        if ($mailer) {
+            $mailer->to('your.easy.choice@gmail.com');
+            $mailer->from('bornfree@ukr.net', 'Vladimir K1.'); // email is required, name is optional
+            $mailer->subject('Hello Vova!');
+            $mailer->body('This is a <b>HTML</b> email.');
+            $result = $mailer->send();
+
+            var_dump($result);
+        }*/
+
         return $this->view->render($response, 'index\index\index.twig', [
             'form' => $form
         ]);
