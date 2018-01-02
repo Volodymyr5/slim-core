@@ -1,23 +1,23 @@
 # Slim Framework Skeleton
 
 ## Contain
-1. Map Routing to Controller `app/routes/*.php`
-2. Twig View, Layout and `path_for()` - path builder `app/views` | `"slim/twig-view"`
-3. CSRF protection with method - `{{ csrf_tokens() | raw }}` | `slim/csrf`
-4. ORM for SQLite and MySQL with - `"j4mie/paris"`
-5. Form builder and validator from ZF2 example from - [https://github.com/akrabat/slim-zendform](https://github.com/akrabat/slim-zendform)
-6. SMTP Mailer example from - [https://github.com/swt83/php-smtp](https://github.com/swt83/php-smtp)
+1. [Map Routing to Controller `app/routes/*.php`](#map-routing-to-controller-approutesphp)
+2. [Twig View, Layout and `path_for()` - path builder `app/views` | `"slim/twig-view"`](#twig-view-layout-and-path_for---path-builder-appviews--slimtwig-view)
+3. [CSRF protection with method - `{{ csrf_tokens() | raw }}` | `slim/csrf`](#csrf-protection-with-method)
+4. [ORM for SQLite and MySQL with - `"j4mie/paris"`](#orm-for-sqlite-and-mysql-with---j4mieparis)
+5. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#form-builder-and-validator)
+6. [SMTP Mailer example from - `github/swt83/php-smtp`](#smtp-mailer-example-from)
 
-### Description
+## Description
 In project for Controllers use such folder structure:
-```
+```text
 app \
     |- Controllers \
         |- <Module Name> \
             |- <Class name> \
 ```
 And for Views:
-```
+```text
 app \
     |- views \
         |- <Module Name> \
@@ -25,20 +25,24 @@ app \
                 |- <Action name> \
 ```
 
-### Map Routing to Controller `app/routes/*.php`
+### 1. Map Routing to Controller `app/routes/*.php`
 #### Usage
 1\. In `app\routes\*.php` add
 
-`$app->any('/', \App\Controllers\Index\IndexController::class . ':index')->setName('home');`
+```php
+$app->any('/', \App\Controllers\Index\IndexController::class . ':index')->setName('home');
+```
 
 2\. In `app/bootstrap.php`, in `// Add routes` section add
 
-`require __DIR__ . '/routes/*.php';`
+```php
+require __DIR__ . '/routes/*.php';
+```
 
-### Twig View, Layout and `path_for()` - path builder `app/views` | `"slim/twig-view"`
+### 2. Twig View, Layout and `path_for()` - path builder `app/views` | `"slim/twig-view"`
 #### Usage
 in any Controller use:
-```
+```php
 return $this->view->render($response, 'index\index\index.twig', [
     'var' => $var
 ]);
@@ -48,19 +52,23 @@ In Twig view you can use:
 
 1\. URL constructor
 
-`{{ path_for('<route name>', { '<route var1>': '<route var1 value>' }) }}`
+```twig
+{{ path_for('<route name>', { '<route var1>': '<route var1 value>' }) }}
+```
 
 2\. URL to assets constructor
-`{{ assets('path/to/script.js') }}` - convert to `/base/path/assets/path/to/script.js`
+```twig
+{{ assets('path/to/script.js') }}` - convert to `/base/path/assets/path/to/script.js
+```
 
-### CSRF protection with method
+### 3. CSRF protection with method
 #### Usage:
 In any form add `{{ csrf_tokens() | raw }}` to pass CSRF check
 
-### ORM for SQLite and MySQL with - `"j4mie/paris"`
+### 4. ORM for SQLite and MySQL with - `"j4mie/paris"`
 #### Usage:
 In `app/Models/` create class:
-```
+```php
 <?php
 
 namespace App\Models;
@@ -69,19 +77,19 @@ namespace App\Models;
  * Class <Class name>
  * @package App\Models
  */
-class <Class name> extends CoreModel {
+class ClassName extends CoreModel {
 }
 ```
 
-`<Class name>` - should be the same as table column name
+`ClassName` - should be the same as table column name
 
 #### More info aboute usage Paris ORM see in docs
 [http://paris.readthedocs.io](http://paris.readthedocs.io)
 
-### Form builder and validator
+### 5. Form builder and validator
 #### Usage:
 Create Form class in `app/Forms`
-```
+```php
 <?php
 
 namespace App\Forms;
@@ -146,7 +154,7 @@ class UserForm extends Form implements InputFilterProviderInterface
 ```
 
 In Any Controller:
-```
+```php
 $form = $this->getForm('App\Forms\UserForm');
 
 if ($request->isPost()) {
@@ -159,10 +167,13 @@ if ($request->isPost()) {
 }
 ```
 
-### SMTP Mailer example from
+#### More info and details
+[https://github.com/akrabat/slim-zendform](https://github.com/akrabat/slim-zendform)
+
+### 6. SMTP Mailer example from
 #### Usage:
 in any Controller use:
-```
+```php
 $mailer = $this->getMailer();
 if ($mailer) {
     $mailer->to('to1@mail.com');
@@ -190,3 +201,6 @@ if ($mailer) {
     var_dump($result);
 }
 ```
+
+#### More info and details
+[https://github.com/swt83/php-smtp](https://github.com/swt83/php-smtp)
