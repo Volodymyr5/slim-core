@@ -5,8 +5,8 @@ session_start();
 require __DIR__ . '/vendor/autoload.php';
 
 // App settings
-$customSettings = require_once __DIR__ . '/Config/settings.php';
-$localSettings = require_once __DIR__ . '/Config/local.php';
+$customSettings = require_once __DIR__ . '/config/settings.php';
+$localSettings = require_once __DIR__ . '/config/local.php';
 $customSettings = array_merge($customSettings, $localSettings);
 
 // Slim app instance
@@ -23,13 +23,13 @@ $app = new \Slim\App([
 $container = $app->getContainer();
 
 // Paris ORM setup
-require __DIR__ . '/src/dbconnection.php';
+require __DIR__ . '/Core/dbconnection.php';
 
 // Fill requirements in Container
-require __DIR__ . '/src/dependencies.php';
+require __DIR__ . '/Core/dependencies.php';
 
 // Add Middleware
-require __DIR__ . '/src/middleware.php';
+require __DIR__ . '/Core/middleware.php';
 
 // Add routes
 require __DIR__ . '/routes/index.php';

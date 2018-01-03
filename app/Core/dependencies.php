@@ -42,7 +42,7 @@ $container['view'] = function ($container) {
 };
 
 // Inject ZF2 form bulider and validator
-$smConfigurator = new \App\Config\ServiceManagerConfigurator();
+$smConfigurator = new \App\Core\ServiceManagerConfigurator();
 $containerServiceManager = $smConfigurator->createServiceManager([]);
 $container['serviceManager'] = $containerServiceManager;
 

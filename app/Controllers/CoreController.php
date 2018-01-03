@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-use App\Libs\SMTP;
+use App\Core\Libs\SMTP;
 
 /**
  * Class CoreController
