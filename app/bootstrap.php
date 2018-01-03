@@ -32,4 +32,5 @@ require __DIR__ . '/Core/dependencies.php';
 require __DIR__ . '/Core/middleware.php';
 
 // Add routes
+require __DIR__ . '/routes/auth.php';
 require __DIR__ . '/routes/index.php';

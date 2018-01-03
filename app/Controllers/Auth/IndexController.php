@@ -43,4 +43,11 @@ class IndexController extends CoreController
             'form' => $form
         ]);
     }
+
+    public function register($request, $response)
+    {
+        return $this->view->render($response, 'auth\index\register.twig', [
+            //'form' => $form
+        ]);
+    }
 }
