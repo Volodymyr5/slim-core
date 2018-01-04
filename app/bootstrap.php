@@ -12,10 +12,10 @@ $customSettings = array_merge($customSettings, $localSettings);
 // Slim app instance
 $app = new \Slim\App([
     'settings' => [
-        'displayErrrorDetails' => true,
         'debug' => true,
         'whoops.editor' => 'sublime',
         'custom' => $customSettings,
+        'determineRouteBeforeAppMiddleware' => true,
     ],
 ]);
 

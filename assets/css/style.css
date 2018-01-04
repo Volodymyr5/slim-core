@@ -1,0 +1,11 @@
+.input-error {
+    border: 1px solid #f0506e;
+}
+
+.input-error + ul {
+    margin-top: 5px;
+    padding-left: 16px;
+    font-size: 80%;
+    color: #f0506e;
+    list-style: square;
+}

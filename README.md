@@ -61,6 +61,8 @@ In Twig view you can use:
 {{ assets('path/to/script.js') }}` - convert to `/base/path/assets/path/to/script.js
 ```
 
+3\. Current route variable - `currentRoute`
+
 ### 3. CSRF protection with method
 #### Usage:
 In any form add `{{ csrf_tokens() | raw }}` to pass CSRF check

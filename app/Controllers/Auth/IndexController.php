@@ -44,10 +44,26 @@ class IndexController extends CoreController
         ]);
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function register($request, $response)
     {
+        $form = $this->getForm('App\Forms\RegisterForm');
+
+        if ($request->isPost()) {
+            $data = $request->getParams();
+            $form->setData($data);
+            $isValid = $form->isValid();
+            if ($isValid) {
+                echo "Success!";
+            }
+        }
+
         return $this->view->render($response, 'auth\index\register.twig', [
-            //'form' => $form
+            'form' => $form
         ]);
     }
 }

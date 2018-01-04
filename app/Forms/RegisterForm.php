@@ -17,64 +17,54 @@ class RegisterForm extends Form implements InputFilterProviderInterface
         $this->add([
             'name' => 'first_name',
             'type' => 'text',
-            'options' => [
-                'label' => 'First name',
-            ],
             'attributes' => [
                 'id' => 'first_name',
                 'class' => 'uk-input',
                 'required' => 'required',
+                'placeholder' => 'First name',
             ],
         ]);
         // Last name
         $this->add([
             'name' => 'last_name',
             'type' => 'text',
-            'options' => [
-                'label' => 'Last name',
-            ],
             'attributes' => [
                 'id' => 'last_name',
                 'class' => 'uk-input',
+                'placeholder' => 'Last name',
             ],
         ]);
         // Email
         $this->add([
             'name' => 'email',
             'type' => 'email',
-            'options' => [
-                'label' => 'Email',
-            ],
             'attributes' => [
                 'id' => 'email',
                 'class' => 'uk-input',
                 'required' => 'required',
+                'placeholder' => 'Email',
             ],
         ]);
         // Password
         $this->add([
             'name' => 'password',
             'type' => 'password',
-            'options' => [
-                'label' => 'Password',
-            ],
             'attributes' => [
                 'id' => 'password',
                 'class' => 'uk-input',
                 'required' => 'required',
+                'placeholder' => 'Password',
             ],
         ]);
         // Repeat password
         $this->add([
             'name' => 'repassword',
-            'type' => 'repassword',
-            'options' => [
-                'label' => 'Repeat password',
-            ],
+            'type' => 'password',
             'attributes' => [
                 'id' => 'repassword',
                 'class' => 'uk-input',
                 'required' => 'required',
+                'placeholder' => 'Repeat password',
             ],
         ]);
 
@@ -86,7 +76,7 @@ class RegisterForm extends Form implements InputFilterProviderInterface
                 'label' => 'Sign Up',
             ],
             'attributes' => [
-                'class' => 'uk-button uk-button-default',
+                'class' => 'uk-button uk-button-primary',
                 'type'  => 'submit',
             ],
         ]);

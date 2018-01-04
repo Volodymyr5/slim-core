@@ -2,14 +2,12 @@
     <div class="uk-container uk-container-expand uk-padding-remove">
 
         <nav class="uk-navbar-container" uk-navbar>
-            <div class="uk-navbar-left">
-
+            <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <li class="uk-active"><a href="#">Active</a></li>
-                    <li><a href="#">Parent</a></li>
-                    <li><a href="#">Item</a></li>
+                    <li{{ (currentRoute == 'home') ? ' class="uk-active"' : '' }}><a href="{{ path_for('home') }}">Home</a></li>
+                    <li{{ (currentRoute == 'login') ? ' class="uk-active"' : '' }}><a href="{{ path_for('login') }}">Sgin In</a></li>
+                    <li{{ (currentRoute == 'register') ? ' class="uk-active"' : '' }}><a href="{{ path_for('register') }}">Sgin Up</a></li>
                 </ul>
-
             </div>
         </nav>
 

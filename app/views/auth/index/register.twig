@@ -4,14 +4,33 @@
     <div class="uk-section uk-padding-remove-vertical">
         <div class="uk-container uk-container-expand">
 
-            <h1>Registration</h1>
-            {#<form method="POST" role="form" class="uk-width-1-4">
-                {{ csrf_tokens() | raw }}
-                <div class="uk-margin">
-                    {{ formRow(form.get('email')) }}
+            <h1 class="uk-text-center uk-medium-small uk-margin-medium-top uk-text-primary">Registration</h1>
+
+            <div class="uk-grid-large uk-flex-center" uk-grid>
+                <div class="uk-width-1-2@s uk-card uk-card-default uk-padding uk-padding-remove-top">
+
+                    <form method="POST" role="form">
+                        {{ csrf_tokens() | raw }}
+                        <div class="uk-margin">
+                            {{ formRow(form.get('first_name')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('last_name')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('email')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('password')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('repassword')) }}
+                        </div>
+
+                        {{ formRow(form.get('submit')) }}
+                    </form>
                 </div>
-                {{ formElement(form.get('submit')) }}
-            </form>#}
+            </div>
 
         </div>
     </div>
