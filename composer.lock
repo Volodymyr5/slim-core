@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d48661ccc0d02e1e17bd018f4fe56bef",
     "content-hash": "57484bcd95012148586fabc286bd2026",
     "packages": [
         {
@@ -36,26 +35,27 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
-            "time": "2017-02-14 19:40:03"
+            "time": "2017-02-14T19:40:03+00:00"
         },
         {
             "name": "j4mie/idiorm",
-            "version": "v1.5.3",
+            "version": "v1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/j4mie/idiorm.git",
-                "reference": "f2f170c44af4761fef8ef34d6dbc237cd95df799"
+                "reference": "d006418da9bb1fb32313e8de7bf35f9e2696c257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/j4mie/idiorm/zipball/f2f170c44af4761fef8ef34d6dbc237cd95df799",
-                "reference": "f2f170c44af4761fef8ef34d6dbc237cd95df799",
+                "url": "https://api.github.com/repos/j4mie/idiorm/zipball/d006418da9bb1fb32313e8de7bf35f9e2696c257",
+                "reference": "d006418da9bb1fb32313e8de7bf35f9e2696c257",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.0"
             },
             "require-dev": {
+                "ext-pdo_sqlite": "*",
                 "phpunit/phpunit": "^4.8"
             },
             "type": "library",
@@ -97,7 +97,7 @@
                 "orm",
                 "query builder"
             ],
-            "time": "2017-03-21 01:31:25"
+            "time": "2018-01-05T06:12:59+00:00"
         },
         {
             "name": "j4mie/paris",
@@ -160,7 +160,7 @@
                 "orm",
                 "paris"
             ],
-            "time": "2017-03-21 02:13:30"
+            "time": "2017-03-21T02:13:30+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -203,7 +203,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2017-01-19 11:35:12"
+            "time": "2017-01-19T11:35:12+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -251,20 +251,20 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-09-27 21:40:39"
+            "time": "2017-09-27T21:40:39+00:00"
         },
         {
             "name": "pimple/pimple",
-            "version": "v3.2.2",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "4d45fb62d96418396ec58ba76e6f065bca16e10a"
+                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/4d45fb62d96418396ec58ba76e6f065bca16e10a",
-                "reference": "4d45fb62d96418396ec58ba76e6f065bca16e10a",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/9e403941ef9d65d20cba7d54e29fe906db42cf32",
+                "reference": "9e403941ef9d65d20cba7d54e29fe906db42cf32",
                 "shasum": ""
             },
             "require": {
@@ -301,7 +301,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2017-07-23 07:32:15"
+            "time": "2018-01-21T07:42:36+00:00"
         },
         {
             "name": "psr/container",
@@ -350,7 +350,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14 16:28:37"
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/http-message",
@@ -400,7 +400,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "slim/csrf",
@@ -450,7 +450,7 @@
                 "middleware",
                 "slim"
             ],
-            "time": "2017-10-14 07:59:05"
+            "time": "2017-10-14T07:59:05+00:00"
         },
         {
             "name": "slim/slim",
@@ -521,7 +521,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2017-11-26 19:13:09"
+            "time": "2017-11-26T19:13:09+00:00"
         },
         {
             "name": "slim/twig-view",
@@ -571,7 +571,7 @@
                 "twig",
                 "view"
             ],
-            "time": "2017-09-20 19:47:37"
+            "time": "2017-09-20T19:47:37+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -630,7 +630,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-10-11 12:05:26"
+            "time": "2017-10-11T12:05:26+00:00"
         },
         {
             "name": "travis/ex",
@@ -667,7 +667,7 @@
             ],
             "description": "A PHP function to safely extract information from a multi-dimensional object or array.",
             "homepage": "https://github.com/swt83/php-ex",
-            "time": "2017-02-14 17:53:38"
+            "time": "2017-02-14T17:53:38+00:00"
         },
         {
             "name": "twig/twig",
@@ -733,7 +733,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-09-27 18:10:31"
+            "time": "2017-09-27T18:10:31+00:00"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -777,7 +777,7 @@
                 "escaper",
                 "zf2"
             ],
-            "time": "2016-06-30 19:48:38"
+            "time": "2016-06-30T19:48:38+00:00"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -831,7 +831,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2017-07-11 19:17:22"
+            "time": "2017-07-11T19:17:22+00:00"
         },
         {
             "name": "zendframework/zend-filter",
@@ -891,7 +891,7 @@
                 "filter",
                 "zf2"
             ],
-            "time": "2017-05-17 20:56:17"
+            "time": "2017-05-17T20:56:17+00:00"
         },
         {
             "name": "zendframework/zend-form",
@@ -969,7 +969,7 @@
                 "form",
                 "zf"
             ],
-            "time": "2017-12-06 21:09:08"
+            "time": "2017-12-06T21:09:08+00:00"
         },
         {
             "name": "zendframework/zend-hydrator",
@@ -1031,7 +1031,7 @@
                 "hydrator",
                 "zf2"
             ],
-            "time": "2017-10-02 15:01:27"
+            "time": "2017-10-02T15:01:27+00:00"
         },
         {
             "name": "zendframework/zend-i18n",
@@ -1098,41 +1098,38 @@
                 "i18n",
                 "zf2"
             ],
-            "time": "2017-05-17 17:00:12"
+            "time": "2017-05-17T17:00:12+00:00"
         },
         {
             "name": "zendframework/zend-inputfilter",
-            "version": "2.8.0",
+            "version": "2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-inputfilter.git",
-                "reference": "e7edd625f2fcdd72a719a7023114c5f4b4f38488"
+                "reference": "55d1430db559e9781b147e73c2c0ce6635d8efe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-inputfilter/zipball/e7edd625f2fcdd72a719a7023114c5f4b4f38488",
-                "reference": "e7edd625f2fcdd72a719a7023114c5f4b4f38488",
+                "url": "https://api.github.com/repos/zendframework/zend-inputfilter/zipball/55d1430db559e9781b147e73c2c0ce6635d8efe2",
+                "reference": "55d1430db559e9781b147e73c2c0ce6635d8efe2",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6 || ^7.0",
                 "zendframework/zend-filter": "^2.6",
+                "zendframework/zend-servicemanager": "^2.7.10 || ^3.3.1",
                 "zendframework/zend-stdlib": "^2.7 || ^3.0",
                 "zendframework/zend-validator": "^2.10.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^5.7.23 || ^6.4.3",
-                "zendframework/zend-coding-standard": "~1.0.0",
-                "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3"
-            },
-            "suggest": {
-                "zendframework/zend-servicemanager": "To support plugin manager support"
+                "zendframework/zend-coding-standard": "~1.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev",
-                    "dev-develop": "2.9-dev"
+                    "dev-master": "2.8.x-dev",
+                    "dev-develop": "2.9.x-dev"
                 },
                 "zf": {
                     "component": "Zend\\InputFilter",
@@ -1154,7 +1151,7 @@
                 "inputfilter",
                 "zf"
             ],
-            "time": "2017-12-04 21:24:25"
+            "time": "2018-01-22T19:41:18+00:00"
         },
         {
             "name": "zendframework/zend-loader",
@@ -1198,7 +1195,7 @@
                 "loader",
                 "zf2"
             ],
-            "time": "2015-06-03 14:05:47"
+            "time": "2015-06-03T14:05:47+00:00"
         },
         {
             "name": "zendframework/zend-servicemanager",
@@ -1250,7 +1247,7 @@
                 "servicemanager",
                 "zf2"
             ],
-            "time": "2017-12-05 16:27:36"
+            "time": "2017-12-05T16:27:36+00:00"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -1295,7 +1292,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2016-09-13 14:38:50"
+            "time": "2016-09-13T14:38:50+00:00"
         },
         {
             "name": "zendframework/zend-validator",
@@ -1366,20 +1363,20 @@
                 "validator",
                 "zf2"
             ],
-            "time": "2017-08-22 14:19:23"
+            "time": "2017-08-22T14:19:23+00:00"
         },
         {
             "name": "zendframework/zend-view",
-            "version": "2.9.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-view.git",
-                "reference": "3b6342c381c4437a03fc81d0064c0bb8924914d3"
+                "reference": "4478cc5dd960e2339d88b363ef99fa278700e80e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-view/zipball/3b6342c381c4437a03fc81d0064c0bb8924914d3",
-                "reference": "3b6342c381c4437a03fc81d0064c0bb8924914d3",
+                "url": "https://api.github.com/repos/zendframework/zend-view/zipball/4478cc5dd960e2339d88b363ef99fa278700e80e",
+                "reference": "4478cc5dd960e2339d88b363ef99fa278700e80e",
                 "shasum": ""
             },
             "require": {
@@ -1410,7 +1407,7 @@
                 "zendframework/zend-router": "^3.0.1",
                 "zendframework/zend-serializer": "^2.6.1",
                 "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-                "zendframework/zend-session": "^2.6.2",
+                "zendframework/zend-session": "^2.8.1",
                 "zendframework/zend-uri": "^2.5"
             },
             "suggest": {
@@ -1434,8 +1431,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.9-dev",
-                    "dev-develop": "3.0-dev"
+                    "dev-master": "2.10.x-dev",
+                    "dev-develop": "2.11.x-dev"
                 }
             },
             "autoload": {
@@ -1453,7 +1450,7 @@
                 "view",
                 "zf2"
             ],
-            "time": "2017-03-21 15:05:56"
+            "time": "2018-01-17T22:21:50+00:00"
         }
     ],
     "packages-dev": [],

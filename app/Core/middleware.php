@@ -1,7 +1,7 @@
 <?php
 // Add csrf middleware
-//$container->csrf->setPersistentTokenMode(true);
-//$app->add($container->csrf);
+$container->csrf->setPersistentTokenMode(true);
+$app->add($container->csrf);
 
 // Add currentRoute variable to Twig global
 $app->add(function ($request, $response, $next) use ($container) {

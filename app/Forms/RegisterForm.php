@@ -7,9 +7,7 @@ use \Zend\Validator\Callback;
 use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\Csrf;
 use Zend\Validator\Identical;
-use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 
 /**
@@ -21,9 +19,6 @@ class RegisterForm extends Form implements InputFilterProviderInterface
     public function init()
     {
         $formName = $this->getName() ? $this->getName() . '-' : '';
-
-        // CSRF
-        $csrf = new Element\Csrf('csrf');
 
         // First name
         $firstName = new Element\Text('first_name');
@@ -87,14 +82,13 @@ class RegisterForm extends Form implements InputFilterProviderInterface
         // Submit button
         $submit = new Element\Submit('submit');
         $submit->setAttributes([
-            'id' => $formName . $repassword->getAttribute('name'),
+            'id' => $formName . $submit->getAttribute('name'),
             'value' => 'Sign Up',
             'class' => 'uk-button uk-button-primary',
             'type' => 'submit'
         ]);
 
         // Add elements to form
-        $this->add($csrf);
         $this->add($firstName);
         $this->add($lastName);
         $this->add($email);
@@ -108,30 +102,6 @@ class RegisterForm extends Form implements InputFilterProviderInterface
      */
     public function getInputFilterSpecification()
     {
-        // CSRF
-        $csrf = [
-            'required' => true,
-            'filters' => [],
-            'validators' => [
-                [
-                    'name' => 'NotEmpty',
-                    'options' => [
-                        'messages' => [
-                            NotEmpty::IS_EMPTY => 'CSRF token that you provided doesn\'t match.',
-                        ]
-                    ]
-                ],
-                [
-                    'name' => 'Csrf',
-                    'options' => [
-                        'messages' => [
-                            Csrf::NOT_SAME => 'The form submitted did not originate from the expected site',
-                        ]
-                    ]
-                ],
-            ],
-        ];
-
         // First Name
         $firstName = [
             'required' => true,
@@ -175,6 +145,7 @@ class RegisterForm extends Form implements InputFilterProviderInterface
             ],
             'validators' => [
                 ['name' => 'EmailAddress'],
+                ['name' => '\App\Forms\Validators\UniqueEmailInDB'],
                 [
                     'name' => 'StringLength',
                     'options' => [
@@ -263,7 +234,6 @@ class RegisterForm extends Form implements InputFilterProviderInterface
         ];
 
         return [
-            'csrf' => $csrf,
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $email,

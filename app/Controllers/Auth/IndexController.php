@@ -58,6 +58,21 @@ class IndexController extends CoreController
             $form->setData($data);
             $isValid = $form->isValid();
             if ($isValid) {
+                $data = $form->getData();
+                $user = \Model::factory('\App\Models\User')->create();
+                $user->email = $data['email'];
+                $user->password = password_hash($data['email'] . $data['password'], PASSWORD_DEFAULT);
+                $user->created = date('Y-m-d H:i:s');
+                $user->updated = date('Y-m-d H:i:s');
+                $user->save();
+
+                $userMeta = $user->userMeta()->create();
+                $userMeta->user_id = $user->id;
+                $userMeta->first_name = $data['first_name'];
+                $userMeta->last_name = $data['last_name'];
+                $userMeta->register_confirm_token = password_hash($data['email'] . date('U'), PASSWORD_DEFAULT);
+                $userMeta->save();
+
                 echo "Success!";
             }
         }
