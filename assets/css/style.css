@@ -2,7 +2,8 @@
     border: 1px solid #f0506e;
 }
 
-.input-error + ul {
+.input-error + ul,
+form .uk-input + ul {
     margin-top: 5px;
     padding-left: 16px;
     font-size: 80%;

@@ -2,8 +2,15 @@
 
 namespace App\Forms;
 
+use App\Forms\Validators\CustomAlpha;
+use \Zend\Validator\Callback;
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\Csrf;
+use Zend\Validator\Identical;
+use Zend\Validator\NotEmpty;
+use Zend\Validator\StringLength;
 
 /**
  * Class RegisterForm
@@ -13,73 +20,87 @@ class RegisterForm extends Form implements InputFilterProviderInterface
 {
     public function init()
     {
+        $formName = $this->getName() ? $this->getName() . '-' : '';
+
+        // CSRF
+        $csrf = new Element\Csrf('csrf');
+
         // First name
-        $this->add([
-            'name' => 'first_name',
-            'type' => 'text',
-            'attributes' => [
-                'id' => 'first_name',
-                'class' => 'uk-input',
-                'required' => 'required',
-                'placeholder' => 'First name',
-            ],
+        $firstName = new Element\Text('first_name');
+        $firstName->setLabelAttributes([
+            'for' => $formName . $firstName->getAttribute('name'),
         ]);
+        $firstName->setAttributes([
+            'id' => $formName . $firstName->getAttribute('name'),
+            'class' => 'uk-input',
+            //'required' => 'required',
+            'placeholder' => 'First name',
+        ]);
+
         // Last name
-        $this->add([
-            'name' => 'last_name',
-            'type' => 'text',
-            'attributes' => [
-                'id' => 'last_name',
-                'class' => 'uk-input',
-                'placeholder' => 'Last name',
-            ],
+        $lastName = new Element\Text('last_name');
+        $lastName->setLabelAttributes([
+            'for' => $formName . $lastName->getAttribute('name'),
         ]);
+        $lastName->setAttributes([
+            'id' => $formName . $lastName->getAttribute('name'),
+            'class' => 'uk-input',
+            'placeholder' => 'Last name',
+        ]);
+
         // Email
-        $this->add([
-            'name' => 'email',
-            'type' => 'email',
-            'attributes' => [
-                'id' => 'email',
-                'class' => 'uk-input',
-                'required' => 'required',
-                'placeholder' => 'Email',
-            ],
+        $email = new Element\Email('email');
+        $email->setLabelAttributes([
+            'for' => $formName . $email->getAttribute('name'),
         ]);
+        $email->setAttributes([
+            'id' => $formName . $email->getAttribute('name'),
+            'class' => 'uk-input',
+            //'required' => 'required',
+            'placeholder' => 'Email',
+        ]);
+
         // Password
-        $this->add([
-            'name' => 'password',
-            'type' => 'password',
-            'attributes' => [
-                'id' => 'password',
-                'class' => 'uk-input',
-                'required' => 'required',
-                'placeholder' => 'Password',
-            ],
+        $password = new Element\Password('password');
+        $password->setLabelAttributes([
+            'for' => $formName . $password->getAttribute('name'),
         ]);
+        $password->setAttributes([
+            'id' => $formName . $password->getAttribute('name'),
+            'class' => 'uk-input',
+            //'required' => 'required',
+            'placeholder' => 'Password',
+        ]);
+
         // Repeat password
-        $this->add([
-            'name' => 'repassword',
-            'type' => 'password',
-            'attributes' => [
-                'id' => 'repassword',
-                'class' => 'uk-input',
-                'required' => 'required',
-                'placeholder' => 'Repeat password',
-            ],
+        $repassword = new Element\Password('repassword');
+        $repassword->setLabelAttributes([
+            'for' => $formName . $repassword->getAttribute('name'),
+        ]);
+        $repassword->setAttributes([
+            'id' => $formName . $repassword->getAttribute('name'),
+            'class' => 'uk-input',
+            //'required' => 'required',
+            'placeholder' => 'Repeat password',
         ]);
 
         // Submit button
-        $this->add([
-            'name' => 'submit',
-            'type' => 'button',
-            'options' => [
-                'label' => 'Sign Up',
-            ],
-            'attributes' => [
-                'class' => 'uk-button uk-button-primary',
-                'type'  => 'submit',
-            ],
+        $submit = new Element\Submit('submit');
+        $submit->setAttributes([
+            'id' => $formName . $repassword->getAttribute('name'),
+            'value' => 'Sign Up',
+            'class' => 'uk-button uk-button-primary',
+            'type' => 'submit'
         ]);
+
+        // Add elements to form
+        $this->add($csrf);
+        $this->add($firstName);
+        $this->add($lastName);
+        $this->add($email);
+        $this->add($password);
+        $this->add($repassword);
+        $this->add($submit);
     }
 
     /**
@@ -87,27 +108,167 @@ class RegisterForm extends Form implements InputFilterProviderInterface
      */
     public function getInputFilterSpecification()
     {
+        // CSRF
+        $csrf = [
+            'required' => true,
+            'filters' => [],
+            'validators' => [
+                [
+                    'name' => 'NotEmpty',
+                    'options' => [
+                        'messages' => [
+                            NotEmpty::IS_EMPTY => 'CSRF token that you provided doesn\'t match.',
+                        ]
+                    ]
+                ],
+                [
+                    'name' => 'Csrf',
+                    'options' => [
+                        'messages' => [
+                            Csrf::NOT_SAME => 'The form submitted did not originate from the expected site',
+                        ]
+                    ]
+                ],
+            ],
+        ];
+
+        // First Name
+        $firstName = [
+            'required' => true,
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+                ['name' => 'StripNewLines'],
+            ],
+            'validators' => [
+                [
+                    'name' => 'StringLength',
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 2,
+                        'max' => 255,
+                        'messages' => [
+                            StringLength::TOO_SHORT => 'Minimum length - %min% characters',
+                            StringLength::TOO_LONG => 'Maximum length - %max% characters',
+                        ]
+                    ]
+                ],
+                new CustomAlpha([
+                    'messages' => [
+                        CustomAlpha::INVALID => 'The field must contains only characters',
+                    ]
+                ])
+            ],
+        ];
+
+        // Last Name
+        $lastName = $firstName;
+        $lastName['required'] = false;
+
+        // Email
+        $email = [
+            'required' => true,
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+                ['name' => 'StripNewLines'],
+            ],
+            'validators' => [
+                ['name' => 'EmailAddress'],
+                [
+                    'name' => 'StringLength',
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'max' => 128,
+                        'messages' => [
+                            StringLength::TOO_LONG => 'Maximum length - %max% characters',
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        // Password
+        $password = [
+            'required' => true,
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+                ['name' => 'StripNewLines'],
+            ],
+            'validators' => [
+                [
+                    'name' => 'StringLength',
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 7,
+                        'max' => 40,
+                        'messages' => [
+                            StringLength::TOO_SHORT => 'Minimum password length - %min% characters',
+                            StringLength::TOO_LONG => 'Maximum password length - %max% characters',
+                        ]
+                    ]
+                ],
+                [
+                    'name' => 'Callback',
+                    'options' => [
+                        'callback' => function ($value, $context = []) {
+                            $is_secure = true;
+
+                            if (!preg_match("#[0-9]+#", $value)) {
+                                $is_secure = false;
+                            }
+
+                            if (!preg_match("#[a-z]+#", $value)) {
+                                $is_secure = false;
+                            }
+
+                            if (!preg_match("#[A-Z]+#", $value)) {
+                                $is_secure = false;
+                            }
+
+                            if (!preg_match("#\W+|_#", $value)) {
+                                $is_secure = false;
+                            }
+
+                            return $is_secure;
+                        },
+                        'messages' => [
+                            Callback::INVALID_VALUE => 'Password is not secure enough. It should contain numbers, letters in upper and lower case and at least one special symbol.',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        // Repeat Password
+        $repassword = [
+            'required' => true,
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+                ['name' => 'StripNewLines'],
+            ],
+            'validators' => [
+                [
+                    'name' => 'Identical',
+                    'options' => [
+                        'token' => 'password',
+                        'messages' => [
+                            Identical::NOT_SAME => 'Passwords must match',
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
         return [
-            'first_name' => [
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                ],
-                'validators' => [
-                    ['name' => 'EmailAddress'],
-                ],
-            ],
-            'email' => [
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                ],
-                'validators' => [
-                    ['name' => 'EmailAddress'],
-                ],
-            ],
+            'csrf' => $csrf,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $email,
+            'password' => $password,
+            'repassword' => $repassword,
         ];
     }
 }
