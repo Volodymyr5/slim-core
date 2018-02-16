@@ -27,12 +27,14 @@ class CoreController
 
     /**
      * @param $property
-     * @return mixed
+     * @return bool
      */
     public function __get($property)
     {
         if($this->container->{$property}) {
             return $this->container->{$property};
+        } else {
+            return false;
         }
     }
 
@@ -49,11 +51,18 @@ class CoreController
     }
 
     /**
-     * @return array
+     * @param bool $configName
+     * @return array|mixed
      */
-    protected function getConfig()
+    protected function getConfig($configName = false)
     {
-        return isset($this->container->settings['custom']) ? $this->container->settings['custom'] : [];
+        $allConfig = isset($this->container->settings['custom']) ? $this->container->settings['custom'] : [];
+
+        if ($configName && isset($allConfig[$configName])) {
+            return $allConfig[$configName];
+        } else {
+            return $allConfig;
+        }
     }
 
     /**
