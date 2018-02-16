@@ -13,6 +13,8 @@
 
     {% include 'partial/navigation.twig' %}
 
+    {{ show_flash_messages() | raw }}
+
     {% block content %}{% endblock %}
 
 </body>

@@ -7,6 +7,7 @@
 4. [ORM for SQLite and MySQL with - `"j4mie/paris"`](#4-orm-for-sqlite-and-mysql-with---j4mieparis)
 5. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#5-form-builder-and-validator)
 6. [SMTP Mailer example from - `github/swt83/php-smtp`](#6-smtp-mailer-example-from)
+7. [Alert and Notifications using - `slim/flash`](#7-alert-and-notifications)
 
 ## Description
 In project for Controllers use such folder structure:
@@ -206,3 +207,26 @@ if ($mailer) {
 
 #### More info and details
 [https://github.com/swt83/php-smtp](https://github.com/swt83/php-smtp)
+
+### 7. Alert and Notifications
+#### Usage:
+In Controller use one of:
+```php
+$this->container->flash->addMessage('primary', '<h4>This is a Primary Notification</h4>');
+$this->container->flash->addMessage('success', '<h4>This is a Success Notification</h4>');
+$this->container->flash->addMessage('warning', '<h4>This is a Warning Notification</h4>');
+$this->container->flash->addMessage('danger', '<h4>This is a Danger Notification</h4>');
+
+$this->container->flash->addMessage('alert-primary', '<h4>This is a Primary Alert</h4>');
+$this->container->flash->addMessage('alert-success', '<h4>This is a Success Alert</h4>');
+$this->container->flash->addMessage('alert-warning', '<h4>This is a Warning Alert</h4>');
+$this->container->flash->addMessage('alert-danger', '<h4>This is a Danger Alert</h4>');
+```
+
+To allow Alerts and Notification in your custom layout use View Helper:
+```twig
+{{ show_flash_messages() | raw }}
+```
+
+#### More info and details
+[https://github.com/slimphp/Slim-Flash](https://github.com/slimphp/Slim-Flash)

@@ -14,3 +14,10 @@ $view->getEnvironment()->addFunction(new \Twig_Function('assets', function () us
 
     return $assets->render();
 }));
+
+// Show Flash Messages View Helper
+$view->getEnvironment()->addFunction(new \Twig_Function('show_flash_messages', function () use ($container) {
+    $showFlashMessages = new \App\ViewHelpers\ShowFlashMessagesHelper($container);
+
+    return $showFlashMessages->render();
+}));

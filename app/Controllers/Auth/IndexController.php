@@ -73,7 +73,7 @@ class IndexController extends CoreController
                 $userMeta->register_confirm_token = password_hash($data['email'] . date('U'), PASSWORD_DEFAULT);
                 $userMeta->save();
 
-                echo "Success!";
+
             }
         }
 

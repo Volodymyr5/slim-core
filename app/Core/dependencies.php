@@ -64,3 +64,8 @@ $view->getEnvironment()->registerUndefinedFunctionCallback(
         return new \Twig_SimpleFunction($name, $callable, $options);
     }
 );
+
+// Inject Slim-Flash
+$container['flash'] = function () {
+    return new \Slim\Flash\Messages();
+};
