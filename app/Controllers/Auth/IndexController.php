@@ -28,16 +28,7 @@ class IndexController extends CoreController
 
         var_dump($users);
 
-        /*$mailer = $this->getMailer();
-        if ($mailer) {
-            $mailer->to('your.easy.choice@gmail.com');
-            $mailer->from('bornfree@ukr.net', 'Vladimir K1.'); // email is required, name is optional
-            $mailer->subject('Hello Vova!');
-            $mailer->body('This is a <b>HTML</b> email.');
-            $result = $mailer->send();
 
-            var_dump($result);
-        }*/
 
         return $this->view->render($response, 'index\index\index.twig', [
             'form' => $form
@@ -87,19 +78,21 @@ class IndexController extends CoreController
                 $userFullName = $userMeta->first_name . (strlen($userMeta->last_name) > 0) ? ' ' . $userMeta->last_name : '';
                 $projectName = (is_string($this->getConfig('projet_name')) ? $this->getConfig('projet_name') : '');
 
-                $mailer = $this->getMailer();
-                if ($mailer && $noReplyEmail) {
-                    $mailer->to($user->email);
-                    $mailer->from($noReplyEmail, 'No reply'); // email is required, name is optional
-                    $mailer->subject('Hello ' . $userFullName . '! Confirm your email. ' . $projectName);
-                    $mailer->body(strval($mailBody->getBody()));
-                    $result = $mailer->send();
+                try {
+                $this->sendMail([
+                    'to' => $user->email,
+                    'subject' => 'Hello ' . $userFullName . '! Confirm your email. ' . $projectName,
+                    'body' => strval($mailBody->getBody()),
+                    'from_name' => 'No reply'
+                ]);
 
-                    $this->container->flash->addMessage(
-                        'alert-success',
-                        '<h3>Thank You for Signing Up!</h3>' .
-                        '<p>We\'ve sent you an email with a confirmation link, use it to activate your new account.</p>'
-                    );
+                $this->container->flash->addMessage(
+                    'alert-success',
+                    '<h3>Thank You for Signing Up!</h3>' .
+                    '<p>We\'ve sent you an email with a confirmation link, use it to activate your new account.</p>'
+                );
+                } catch (\Exception $e) {
+
                 }
             }
         }

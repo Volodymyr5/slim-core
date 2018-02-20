@@ -177,32 +177,17 @@ if ($request->isPost()) {
 #### Usage:
 in any Controller use:
 ```php
-$mailer = $this->getMailer();
-if ($mailer) {
-    $mailer->to('to1@mail.com');
-    $mailer->to('to2@mail.com');
-    // add cc
-    $mailer->cc('to3@mail.com');
-    $mailer->cc('to4@mail.com');
-    // add bcc
-    $mailer->bcc('to5@mail.com');
-    $mailer->bcc('to6@mail.com');
-    $mailer->from('from@mail.com', 'From Name');
-    $mailer->reply('reply@mail.com', 'Reply Name');
-    // add attachment
-    $mailer->attach('/path/to/file1.png');
-    $mailer->attach('/path/to/file2.png');
-    $mailer->subject('Mail Subject');
-    $mailer->body('Mail <b>Body</b>.');
-    
-    $mailer->text('Text version of email.');
-    
-    $result = $mailer->send();
-    // Send only text
-    $result = $mailer->send_text();
-
-    var_dump($result);
-}
+$this->sendMail([
+    // required
+    'to' => ['to1@mail.com', 'to2@mail.com'],
+    'subject' => 'Mail Subject',
+    'body' => 'Mail <b>Body</b>.',
+    // not required
+    'from_name' => 'From Name',
+    'copy' => ['copy1@mail.com', 'copy2@mail.com'],
+    'hidden_copy' => ['hidden_copy1@mail.com', 'hidden_copy2@mail.com'],
+    'attachments' => ['/file/full/path/1.jpg', '/file/full/path/2.jpg']
+]);
 ```
 
 #### More info and details

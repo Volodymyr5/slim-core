@@ -66,14 +66,81 @@ class CoreController
     }
 
     /**
+     * @param array $params
+     * @return bool
+     * @throws \Exception
+     */
+    protected function sendMail($params = [])
+    {
+        $params['to'] = !empty($params['to']) ? $params['to'] : [];
+        $params['to'] = (is_string($params['to'])) ? [$params['to']] : $params['to'];
+        $params['copy'] = !empty($params['copy']) ? $params['copy'] : [];
+        $params['copy'] = (is_string($params['copy'])) ? [$params['copy']] : $params['copy'];
+        $params['hidden_copy'] = !empty($params['hidden_copy']) ? $params['hidden_copy'] : [];
+        $params['hidden_copy'] = (is_string($params['hidden_copy'])) ? [$params['hidden_copy']] : $params['hidden_copy'];
+        $params['from_name'] = !empty($params['from_name']) ? $params['from_name'] : null;
+        $params['subject'] = !empty($params['subject']) ? $params['subject'] : null;
+        $params['body'] = !empty($params['body']) ? $params['body'] : null;
+        $params['attachments'] = !empty($params['attachments']) ? $params['attachments'] : [];
+        $params['attachments'] = (is_string($params['attachments'])) ? [$params['attachments']] : $params['attachments'];
+
+        if ($params['to'] && $params['subject'] && $params['body']) {
+            $mailer = $this->getMailer($params['from_name']);
+            if ($mailer) {
+                // to
+                foreach ($params['to'] as $recipient) {
+                    $mailer->to($recipient);
+                }
+                // copy
+                foreach ($params['copy'] as $recipient) {
+                    $mailer->cc($recipient);
+                }
+                // hidden_copy
+                foreach ($params['hidden_copy'] as $recipient) {
+                    $mailer->bcc($recipient);
+                }
+                // subject
+                $mailer->subject($params['subject']);
+                // body
+                $mailer->body($params['body']);
+                // attachments
+                foreach ($params['attachments'] as $attachment) {
+                    $mailer->attach($attachment);
+                }
+                $result = $mailer->send();
+            } else {
+                if ($params['copy']) {
+                    $params['to'] = array_merge($params['to'], $params['copy']);
+                }
+                $params['to'] = implode(', ', $params['to']);
+
+                @mail($params['to'], $params['subject'], $params['body']);
+
+                foreach ($params['hidden_copy'] as $recipient) {
+                    @mail($recipient, $params['subject'], $params['body']);
+                }
+            }
+
+            return true;
+        } else {
+            throw new \Exception('CoreController->sendMail: to, subject and body parameters is required!');
+        }
+    }
+
+    /**
      * @return SMTP|bool
      */
-    protected function getMailer()
+    protected function getMailer($fromName = null)
     {
         $config = $this->getConfig();
 
-        if (isset($config['smtp']['connections'])) {
-            return new SMTP($config['smtp']);
+        return false;
+
+        if (!empty($config['smtp']['connections']['primary']['user'])) {
+            $mailer = new SMTP($config['smtp']);
+            $mailer->from($config['smtp']['connections']['primary']['user'], $fromName);
+
+            return $mailer;
         } else {
             return false;
         }
