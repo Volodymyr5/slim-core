@@ -8,7 +8,7 @@ $dbType = false;
 
 // Check SQLight
 if (
-    isset($dbSettings['sqlight']['file_path']) &&
+    !empty($dbSettings['sqlight']['file_path']) &&
     file_exists($dbSettings['sqlight']['file_path'])
 ) {
     $dbType = 'sqlight';
@@ -16,10 +16,10 @@ if (
 
 // Check MySql
 if (
-    isset($dbSettings['mysql']['host']) && strlen($dbSettings['mysql']['host']) &&
-    isset($dbSettings['mysql']['dbname']) && strlen($dbSettings['mysql']['dbname']) &&
-    isset($dbSettings['mysql']['username']) && strlen($dbSettings['mysql']['username']) &&
-    isset($dbSettings['mysql']['password'])
+    !empty($dbSettings['mysql']['host']) &&
+    !empty($dbSettings['mysql']['dbname']) &&
+    !empty($dbSettings['mysql']['username']) &&
+    !empty($dbSettings['mysql']['password'])
 ) {
     $dbType = 'mysql';
 }
@@ -37,4 +37,3 @@ switch ($dbType) {
     default:
         throw new \Exception('Error. Wrong Data Base connection!');
 }
-

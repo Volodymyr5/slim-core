@@ -6,7 +6,11 @@ require __DIR__ . '/vendor/autoload.php';
 
 // App settings
 $customSettings = require_once __DIR__ . '/config/settings.php';
-$localSettings = require_once __DIR__ . '/config/local.php';
+try {
+    $localSettings = require_once __DIR__ . '/config/local.php';
+} catch (\Exception $e) {
+    $localSettings = [];
+}
 $customSettings = array_merge($customSettings, $localSettings);
 
 // Slim app instance
