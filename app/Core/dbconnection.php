@@ -27,13 +27,15 @@ if (
 // Setup Paris ORM
 switch ($dbType) {
     case 'sqlight':
-        ORM::configure('sqlite:' . $dbSettings['sqlight']['file_path']);
+        \ORM::configure('sqlite:' . $dbSettings['sqlight']['file_path']);
         break;
     case 'mysql':
-        ORM::configure('mysql:host=' . $dbSettings['mysql']['host'] . ';dbname=' . $dbSettings['mysql']['dbname']);
-        ORM::configure('username', $dbSettings['mysql']['username']);
-        ORM::configure('password', $dbSettings['mysql']['password']);
+        \ORM::configure('mysql:host=' . $dbSettings['mysql']['host'] . ';dbname=' . $dbSettings['mysql']['dbname']);
+        \ORM::configure('username', $dbSettings['mysql']['username']);
+        \ORM::configure('password', $dbSettings['mysql']['password']);
         break;
     default:
         throw new \Exception('Error. Wrong Data Base connection!');
 }
+
+\ORM::configure('logging', true);

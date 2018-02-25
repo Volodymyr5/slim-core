@@ -4,7 +4,7 @@
 1. [Map Routing to Controller `app/MVC/routes/*.php`](#1-map-routing-to-controller-approutesphp)
 2. [Twig View, Layout and `path_for()` - path builder `app/MVC/views` | `"slim/twig-view"`](#2-twig-view-layout-and-path_for---path-builder-appviews--slimtwig-view)
 3. [CSRF protection with method - `{{ csrf_tokens() | raw }}` | `slim/csrf`](#3-csrf-protection-with-method)
-4. [ORM for SQLite and MySQL with - `"j4mie/paris"`](#4-orm-for-sqlite-and-mysql-with---j4mieparis)
+4. [ORM for SQLite and MySQL with - `"j4mie/idiorm"`](#4-orm-for-sqlite-and-mysql-with---j4mieidiorm)
 5. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#5-form-builder-and-validator)
 6. [SMTP Mailer example from - `github/swt83/php-smtp`](#6-smtp-mailer-example-from)
 7. [Alert and Notifications using - `slim/flash`](#7-alert-and-notifications)
@@ -68,7 +68,7 @@ In Twig view you can use:
 #### Usage:
 In any form add `{{ csrf_tokens() | raw }}` to pass CSRF check
 
-### 4. ORM for SQLite and MySQL with - `"j4mie/paris"`
+### 4. ORM for SQLite and MySQL with - `"j4mie/idiorm"`
 #### Usage:
 In `app/MVC/Models/` create class:
 ```php
@@ -86,8 +86,8 @@ class ClassName extends CoreModel {
 
 `ClassName` - should be the same as table column name
 
-#### More info aboute usage Paris ORM see in docs
-[http://paris.readthedocs.io](http://paris.readthedocs.io)
+#### More info aboute usage IdiORM see in docs
+[http://idiorm.readthedocs.io](http://idiorm.readthedocs.io)
 
 ### 5. Form builder and validator
 #### Usage:

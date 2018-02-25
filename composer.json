@@ -6,7 +6,7 @@
     "slim/slim": "^3.0",
     "slim/twig-view": "^2.3",
     "slim/csrf": "^0.8.2",
-    "j4mie/paris": "^1.5",
+    "j4mie/idiorm": "*",
     "zendframework/zend-form": "2.*",
     "zendframework/zend-servicemanager": "2.*",
     "zendframework/zend-i18n": "2.*",

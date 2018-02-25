@@ -2,6 +2,7 @@
 
 namespace App\Forms\Validators;
 
+use App\MVC\Models\User;
 use Zend\Validator\AbstractValidator;
 
 /**
@@ -22,13 +23,15 @@ class UniqueEmailInDB extends AbstractValidator
      */
     public function isValid($value)
     {
+        $u = new User();
+
         $this->setValue($value);
 
         $isValid = true;
 
-        $users = \Model::factory('\App\MVC\Models\User')
-            ->where('email', $value)
-            ->find_many();
+        $users = $u->getAll([
+            'email' => $value
+        ]);
 
         if (count($users)) {
             $this->error(self::INVALID);
