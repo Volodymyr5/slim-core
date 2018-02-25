@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ViewHelpers;
+namespace App\MVC\ViewHelpers;
 
 /**
  * Class ShowFlashMessagesHelper
- * @package App\ViewHelpers
+ * @package App\MVC\ViewHelpers
  */
 class ShowFlashMessagesHelper
 {
@@ -48,7 +48,6 @@ class ShowFlashMessagesHelper
                 }
             }
         }
-        //var_dump($messages);
 
         $sfmContent = ob_get_contents();
         ob_end_clean();

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\MVC\Controllers\Auth;
 
-use \App\Controllers\CoreController;
-use App\Models\User;
+use \App\Core\CoreController;
+use App\MVC\Models\User;
 
 /**
  * Class IndexController
- * @package App\Controllers\Auth
+ * @package App\MVC\Controllers\Auth
  */
 class IndexController extends CoreController
 {
@@ -50,7 +50,7 @@ class IndexController extends CoreController
             $isValid = $form->isValid();
             if ($isValid) {
                 $data = $form->getData();
-                $user = \Model::factory('\App\Models\User')->create();
+                $user = \Model::factory('\App\MVC\Models\User')->create();
                 $user->email = $data['email'];
                 $user->created = date('Y-m-d H:i:s');
                 $user->updated = date('Y-m-d H:i:s');
@@ -77,20 +77,22 @@ class IndexController extends CoreController
                 $projectName = (is_string($this->getConfig('projet_name')) ? $this->getConfig('projet_name') : '');
 
                 try {
-                $this->sendMail([
-                    'to' => $user->email,
-                    'subject' => 'Hello ' . $userFullName . '! Confirm your email. ' . $projectName,
-                    'body' => strval($mailBody->getBody()),
-                    'from_name' => 'No reply'
-                ]);
+                    $this->sendMail([
+                        'to' => $user->email,
+                        'subject' => 'Hello ' . $userFullName . '! Confirm your email. ' . $projectName,
+                        'body' => strval($mailBody->getBody()),
+                        'from_name' => 'No reply'
+                    ]);
 
-                $this->container->flash->addMessage(
-                    'alert-success',
-                    '<h3>Thank You for Signing Up!</h3>' .
-                    '<p>We\'ve sent you an email with a confirmation link, use it to activate your new account.</p>'
-                );
+                    $this->container->flash->addMessage(
+                        'alert-success',
+                        '<h3>Thank You for Signing Up!</h3>' .
+                        '<p>We\'ve sent you an email with a confirmation link, use it to activate your new account.</p>'
+                    );
+
+                    return $response->withRedirect($this->router->pathFor('register'));
                 } catch (\Exception $e) {
-
+                    echo $e->getMessage();
                 }
             }
         }

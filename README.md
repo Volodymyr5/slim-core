@@ -1,8 +1,8 @@
 # Slim Framework Skeleton
 
 ## Contain
-1. [Map Routing to Controller `app/routes/*.php`](#1-map-routing-to-controller-approutesphp)
-2. [Twig View, Layout and `path_for()` - path builder `app/views` | `"slim/twig-view"`](#2-twig-view-layout-and-path_for---path-builder-appviews--slimtwig-view)
+1. [Map Routing to Controller `app/MVC/routes/*.php`](#1-map-routing-to-controller-approutesphp)
+2. [Twig View, Layout and `path_for()` - path builder `app/MVC/views` | `"slim/twig-view"`](#2-twig-view-layout-and-path_for---path-builder-appviews--slimtwig-view)
 3. [CSRF protection with method - `{{ csrf_tokens() | raw }}` | `slim/csrf`](#3-csrf-protection-with-method)
 4. [ORM for SQLite and MySQL with - `"j4mie/paris"`](#4-orm-for-sqlite-and-mysql-with---j4mieparis)
 5. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#5-form-builder-and-validator)
@@ -12,26 +12,26 @@
 ## Description
 In project for Controllers use such folder structure:
 ```text
-app \
+app \ MVC \
     |- Controllers \
         |- <Module Name> \
             |- <Class name> \
 ```
 And for Views:
 ```text
-app \
+app \ MVC \
     |- views \
         |- <Module Name> \
             |- <Class name> \
                 |- <Action name> \
 ```
 
-### 1. Map Routing to Controller `app/routes/*.php`
+### 1. Map Routing to Controller `app/MVC/routes/*.php`
 #### Usage
-1\. In `app\routes\*.php` add
+1\. In `app\MVC\routes\*.php` add
 
 ```php
-$app->any('/', \App\Controllers\Index\IndexController::class . ':index')->setName('home');
+$app->any('/', \App\MVC\Controllers\Index\IndexController::class . ':index')->setName('home');
 ```
 
 2\. In `app/bootstrap.php`, in `// Add routes` section add
@@ -40,7 +40,7 @@ $app->any('/', \App\Controllers\Index\IndexController::class . ':index')->setNam
 require __DIR__ . '/routes/*.php';
 ```
 
-### 2. Twig View, Layout and `path_for()` - path builder `app/views` | `"slim/twig-view"`
+### 2. Twig View, Layout and `path_for()` - path builder `app/MVC/views` | `"slim/twig-view"`
 #### Usage
 in any Controller use:
 ```php
@@ -70,15 +70,15 @@ In any form add `{{ csrf_tokens() | raw }}` to pass CSRF check
 
 ### 4. ORM for SQLite and MySQL with - `"j4mie/paris"`
 #### Usage:
-In `app/Models/` create class:
+In `app/MVC/Models/` create class:
 ```php
 <?php
 
-namespace App\Models;
+namespace App\MVC\Models;
 
 /**
  * Class ClassName
- * @package App\Models
+ * @package App\MVC\Models
  */
 class ClassName extends CoreModel {
 }

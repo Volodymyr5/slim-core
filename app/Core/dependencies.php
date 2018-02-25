@@ -23,7 +23,7 @@ unset($container['phpErrorHandler']);
 
 // Inject Slim-Twig
 $container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig(__DIR__ . '/../views', [
+    $view = new \Slim\Views\Twig(__DIR__ . '/../MVC/views', [
         'cache' => false,
         'debug' => true,
     ]);

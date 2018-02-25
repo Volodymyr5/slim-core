@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ViewHelpers;
+namespace App\MVC\ViewHelpers;
 
 /**
  * Class CsrfTokensHelper
- * @package App\ViewHelpers
+ * @package App\MVC\ViewHelpers
  */
 class CsrfTokensHelper
 {

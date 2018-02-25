@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\MVC\Models;
+
+use App\Core\CoreModel;
 
 /**
  * Class User
- * @package App\Models
+ * @package App\MVC\Models
  *
  * @property int $id
  * @property string $email
@@ -20,6 +22,6 @@ class User extends CoreModel {
      * @return \ORMWrapper
      */
     public function userMeta() {
-        return $this->has_one('\App\Models\UserMeta');
+        return $this->has_one('\App\MVC\Models\UserMeta');
     }
 }

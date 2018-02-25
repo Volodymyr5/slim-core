@@ -28,7 +28,8 @@ class RegisterForm extends Form implements InputFilterProviderInterface
         $firstName->setAttributes([
             'id' => $formName . $firstName->getAttribute('name'),
             'class' => 'uk-input',
-            //'required' => 'required',
+            'required' => 'required',
+            'autofocus' => 'autofocus',
             'placeholder' => 'First name',
         ]);
 

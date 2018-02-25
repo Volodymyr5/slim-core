@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Core;
 
 /**
  * Class CoreModel
- * @package App\Models
+ * @package App\Core
  */
 class CoreModel extends \Model
 {

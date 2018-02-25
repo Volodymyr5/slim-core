@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controllers\Index;
+namespace App\MVC\Controllers\Index;
 
-use \App\Controllers\CoreController;
-use App\Models\User;
+use \App\Core\CoreController;
+use App\MVC\Models\User;
 
 /**
  * Class IndexController
- * @package App\Controllers\Index
+ * @package App\MVC\Controllers\Index
  */
 class IndexController extends CoreController
 {
@@ -27,17 +27,6 @@ class IndexController extends CoreController
         $users = User::count();
 
         var_dump($users);
-
-        /*$mailer = $this->getMailer();
-        if ($mailer) {
-            $mailer->to('your.easy.choice@gmail.com');
-            $mailer->from('bornfree@ukr.net', 'Vladimir K1.'); // email is required, name is optional
-            $mailer->subject('Hello Vova!');
-            $mailer->body('This is a <b>HTML</b> email.');
-            $result = $mailer->send();
-
-            var_dump($result);
-        }*/
 
         return $this->view->render($response, 'index\index\index.twig', [
             'form' => $form

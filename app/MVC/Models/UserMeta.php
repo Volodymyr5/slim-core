@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\MVC\Models;
+
+use App\Core\CoreModel;
 
 /**
  * Class UserMeta
- * @package App\Models
+ * @package App\MVC\Models
  *
  * @property int $id
  * @property int $user_id
@@ -19,6 +21,6 @@ class UserMeta extends CoreModel {
      * @return $this|null
      */
     public function user() {
-        return $this->belongs_to('\App\Models\User');
+        return $this->belongs_to('\App\MVC\Models\User');
     }
 }

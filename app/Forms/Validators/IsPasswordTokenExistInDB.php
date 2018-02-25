@@ -26,7 +26,7 @@ class IsPasswordTokenExistInDB extends AbstractValidator
 
         $isValid = true;
 
-        $users = \Model::factory('\App\Models\User')
+        $users = \Model::factory('\App\MVC\Models\User')
             ->where('password_token', $value)
             ->find_many();
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ViewHelpers;
+namespace App\MVC\ViewHelpers;
 
 /**
  * Class AssetsHelper
- * @package App\ViewHelpers
+ * @package App\MVC\ViewHelpers
  */
 class AssetsHelper
 {
