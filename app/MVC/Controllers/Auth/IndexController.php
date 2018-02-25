@@ -113,4 +113,11 @@ class IndexController extends CoreController
             'form' => $form
         ]);
     }
+
+    public function testEmail($request, $response)
+    {
+        return $this->view->render($response, 'emails\registration_confirm.twig', [
+            'password_token' => '899a36fc1e8f8104c8ab1ed867ecfb65'
+        ]);
+    }
 }

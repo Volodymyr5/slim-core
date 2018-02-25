@@ -1,2 +1,10 @@
-<h1>confirm your registration</h1>
-<div>{{ password_token }}</div>
+{% extends 'emails/layout/main.twig' %}
+
+{% block content %}
+    <h1 style="text-align: center">Confirm your registration</h1>
+    <div>
+        <p>Thank you for your registration.</p>
+
+        {{ password_token }}
+    </div>
+{% endblock %}

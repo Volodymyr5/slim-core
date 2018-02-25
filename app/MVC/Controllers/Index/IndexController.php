@@ -32,19 +32,4 @@ class IndexController extends CoreController
             'form' => $form
         ]);
     }
-
-    public function register($request, $response)
-    {
-
-    }
-
-    public function logout($request, $response)
-    {
-
-    }
-
-    public function confirm($request, $response)
-    {
-
-    }
 }

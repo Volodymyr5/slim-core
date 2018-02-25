@@ -21,3 +21,11 @@ $view->getEnvironment()->addFunction(new \Twig_Function('show_flash_messages', f
 
     return $showFlashMessages->render();
 }));
+
+// Get Config View Helper
+$view->getEnvironment()->addFunction(new \Twig_Function('get_config', function () use ($container) {
+    $configName = func_get_arg(0) ? func_get_arg(0) : '';
+    $config = new \App\MVC\ViewHelpers\GetConfigHelper($container, $configName);
+
+    return $config->render();
+}));
