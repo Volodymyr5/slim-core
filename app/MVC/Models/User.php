@@ -8,13 +8,13 @@ use App\Core\CoreModel;
  * Class User
  * @package App\MVC\Models
  *
- * @property int $id
- * @property string $email
- * @property string $password
- * @property string $access_token
- * @property string $update_token
- * @property int $created
- * @property int $updated
+ * @property string id
+ * @property string email
+ * @property string password
+ * @property string password_token
+ * @property string password_token_type
+ * @property string created
+ * @property string updated
  */
 class User extends CoreModel {
 

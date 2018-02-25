@@ -20,6 +20,16 @@ class IndexController extends CoreController
             $form->setData($data);
             $isValid = $form->isValid();
             if ($isValid) {
+
+                echo 'send';
+
+                $this->sendMail([
+                    'to' => 'test.com',
+                    'subject' => 'Hello! Confirm your email.',
+                    'body' => 'Hello! Confirm your email.',
+                    'from_name' => 'No reply'
+                ]);
+
                 echo "Success!";
                 exit;
             }

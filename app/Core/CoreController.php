@@ -107,7 +107,10 @@ class CoreController
                 foreach ($params['attachments'] as $attachment) {
                     $mailer->attach($attachment);
                 }
+
+                ob_start();
                 $result = $mailer->send();
+                ob_clean();
             } else {
                 if ($params['copy']) {
                     $params['to'] = array_merge($params['to'], $params['copy']);
@@ -133,8 +136,6 @@ class CoreController
     protected function getMailer($fromName = null)
     {
         $config = $this->getConfig();
-
-        return false;
 
         if (!empty($config['smtp']['connections']['primary']['user'])) {
             $mailer = new SMTP($config['smtp']);
