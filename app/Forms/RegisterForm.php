@@ -16,6 +16,9 @@ use Zend\Validator\StringLength;
  */
 class RegisterForm extends Form implements InputFilterProviderInterface
 {
+    /**
+     * Init form
+     */
     public function init()
     {
         $formName = $this->getName() ? $this->getName() . '-' : '';

@@ -38,7 +38,7 @@ class User extends CoreModel {
 
     /**
      * @param UserEntity $e
-     * @return int
+     * @return array|mixed|null
      * @throws \Exception
      */
     public function create(UserEntity $e)

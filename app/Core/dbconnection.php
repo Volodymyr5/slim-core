@@ -24,7 +24,7 @@ if (
     $dbType = 'mysql';
 }
 
-// Setup Paris ORM
+// Setup idiORM
 switch ($dbType) {
     case 'sqlight':
         \ORM::configure('sqlite:' . $dbSettings['sqlight']['file_path']);

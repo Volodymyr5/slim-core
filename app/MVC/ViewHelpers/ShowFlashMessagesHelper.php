@@ -17,7 +17,7 @@ class ShowFlashMessagesHelper
 
     /**
      * ShowFlashMessagesHelper constructor.
-     * @param $container
+     * @param \Psr\Container\ContainerInterface $container
      */
     public function __construct($container)
     {

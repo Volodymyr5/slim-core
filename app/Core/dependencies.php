@@ -5,18 +5,6 @@ $container['csrf'] = function ($container) {
     return new \Slim\Csrf\Guard;
 };
 
-/*$container['errorHandler'] = function ($container) {
-    return function ($request, $response, $exception) use ($container) {
-        $message = '<h1>Slim Application Error</h1><p>A website error has occurred. Sorry for the temporary inconvenience.</p>';
-        $message .= '<p>' . $exception->getMessage() . '</p>';
-        $message .= '<pre>' . $exception->getTraceAsString() . '</pre>';
-
-        return $container['response']->withStatus(500)
-            ->withHeader('Content-Type', 'text/html')
-            ->write($message);
-    };
-};*/
-
 // Disable Slim Error handler
 unset($container['errorHandler']);
 unset($container['phpErrorHandler']);
@@ -46,7 +34,7 @@ $smConfigurator = new \App\Core\ServiceManagerConfigurator();
 $containerServiceManager = $smConfigurator->createServiceManager([]);
 $container['serviceManager'] = $containerServiceManager;
 
-// Set up Twig fallback function
+// Set up Twig callback function
 $viewHelperManager = $containerServiceManager->get('ViewHelperManager');
 $renderer = new \Zend\View\Renderer\PhpRenderer();
 $renderer->setHelperPluginManager($viewHelperManager);

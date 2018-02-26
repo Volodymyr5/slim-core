@@ -23,6 +23,7 @@ class AssetsHelper
     /**
      * AssetsHelper constructor.
      * @param \Psr\Container\ContainerInterface $container
+     * @param string $path
      */
     public function __construct($container, $path = '')
     {

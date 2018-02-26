@@ -6,7 +6,7 @@ use App\Core\EntityInterface;
 
 /**
  * Class UserEntity
- * @package App\MVC\Entity\UserEntity
+ * @package App\MVC\Entity
  */
 class UserEntity implements EntityInterface {
 
@@ -21,7 +21,7 @@ class UserEntity implements EntityInterface {
     protected $last_name;
 
     /**
-     * @return $id
+     * @return mixed
      */
     public function getId()
     {
@@ -37,7 +37,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $email
+     * @return mixed
      */
     public function getEmail()
     {
@@ -53,7 +53,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $password
+     * @return mixed
      */
     public function getPassword()
     {
@@ -69,7 +69,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $password_token
+     * @return mixed
      */
     public function getPasswordToken()
     {
@@ -85,7 +85,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $password_token_type
+     * @return mixed
      */
     public function getPasswordTokenType()
     {
@@ -101,7 +101,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $created
+     * @return mixed
      */
     public function getCreated()
     {
@@ -117,7 +117,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $updated
+     * @return mixed
      */
     public function getUpdated()
     {
@@ -133,7 +133,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $first_name
+     * @return mixed
      */
     public function getFirstName()
     {
@@ -149,7 +149,7 @@ class UserEntity implements EntityInterface {
     }
 
     /**
-     * @return $last_name
+     * @return mixed
      */
     public function getLastName()
     {

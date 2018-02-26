@@ -18,7 +18,7 @@ class CoreController
 
     /**
      * CoreController constructor.
-     * @param \Psr\Container\ContainerInterface $container
+     * @param $container
      */
     public function __construct($container)
     {
@@ -131,6 +131,7 @@ class CoreController
     }
 
     /**
+     * @param null $fromName
      * @return SMTP|bool
      */
     protected function getMailer($fromName = null)

@@ -32,7 +32,7 @@ class GetConfigHelper
     }
 
     /**
-     * @return string|array
+     * @return array|mixed
      */
     public function render()
     {

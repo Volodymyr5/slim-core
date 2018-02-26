@@ -54,6 +54,7 @@ class IndexController extends CoreController
      * @param $request
      * @param $response
      * @return mixed
+     * @throws \Exception
      */
     public function register($request, $response)
     {
@@ -114,6 +115,11 @@ class IndexController extends CoreController
         ]);
     }
 
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
     public function testEmail($request, $response)
     {
         return $this->view->render($response, 'emails\registration_confirm.twig', [
