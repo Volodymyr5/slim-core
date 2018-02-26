@@ -30,7 +30,7 @@ class SetPasswordForm extends Form implements InputFilterProviderInterface
         $password->setAttributes([
             'id' => $formName . $password->getAttribute('name'),
             'class' => 'uk-input',
-            //'required' => 'required',
+            'required' => 'required',
             'placeholder' => 'Password',
         ]);
 
@@ -42,7 +42,7 @@ class SetPasswordForm extends Form implements InputFilterProviderInterface
         $repassword->setAttributes([
             'id' => $formName . $repassword->getAttribute('name'),
             'class' => 'uk-input',
-            //'required' => 'required',
+            'required' => 'required',
             'placeholder' => 'Repeat password',
         ]);
 
@@ -72,33 +72,7 @@ class SetPasswordForm extends Form implements InputFilterProviderInterface
             'required' => true,
             'validators' => [
                 [
-                    'name' => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min' => 10,
-                        'max' => 45,
-                        'messages' => [
-                            StringLength::TOO_SHORT => 'Minimum length - %min% characters',
-                            StringLength::TOO_LONG => 'Maximum length - %max% characters',
-                        ]
-                    ]
-                ],
-                [
-                    'name' => 'Callback',
-                    'options' => [
-                        'callback' => function ($value, $context = []) {
-                            if (preg_match('/^[a-zA-Z0-9]+$/ui', $value)) {
-                                return true;
-                            }
-                            return false;
-                        },
-                        'messages' => [
-                            Callback::INVALID_VALUE => 'Invalid token syntax!',
-                        ],
-                    ]
-                ],
-                [
-                    'name' => '\App\Forms\Validators\IsPasswordTokenExistInDB'
+                    'name' => '\App\Forms\Validators\IsPasswordTokenValid'
                 ],
             ],
         ];

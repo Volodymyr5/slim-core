@@ -29,3 +29,10 @@ $view->getEnvironment()->addFunction(new \Twig_Function('get_config', function (
 
     return $config->render();
 }));
+
+// Get Site Url Helper
+$view->getEnvironment()->addFunction(new \Twig_Function('get_site_url', function () use ($container) {
+    $config = new \App\MVC\ViewHelpers\GetSiteUrlHelper($container);
+
+    return $config->render();
+}));

@@ -4,6 +4,7 @@ namespace App\MVC\Controllers\Auth;
 
 use App\Core\Constant;
 use \App\Core\CoreController;
+use App\Forms\Validators\IsPasswordTokenValid;
 use App\MVC\Entity\UserEntity;
 use App\MVC\Models\User;
 
@@ -112,6 +113,28 @@ class IndexController extends CoreController
 
         return $this->view->render($response, 'auth\index\register.twig', [
             'form' => $form
+        ]);
+    }
+
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     */
+    public function setPassword($request, $response)
+    {
+        $token = $request->getParam('t', '');
+
+        $isPasswordTokenValid = new IsPasswordTokenValid();
+
+        $form = $this->getForm('App\Forms\SetPasswordForm');
+
+        // set token
+        $form->get('token')->setValue($token);
+
+        return $this->view->render($response, 'auth\index\set-password.twig', [
+            'form' => $form,
+            'is_valid_token' => $isPasswordTokenValid->isValid($token)
         ]);
     }
 

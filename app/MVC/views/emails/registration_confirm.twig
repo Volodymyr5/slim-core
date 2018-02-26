@@ -1,10 +1,14 @@
 {% extends 'emails/layout/main.twig' %}
 
 {% block content %}
-    <h1 style="text-align: center">Confirm your registration</h1>
-    <div>
-        <p>Thank you for your registration.</p>
-
-        {{ password_token }}
-    </div>
+    <center>
+        <h1 style="text-align: center">Registration Confirmation</h1>
+        <div>
+            <p>Thank you for your interest.</p>
+            <p>To confirm registration follow link</p>
+            <p><a href="{{ get_site_url() }}{{ path_for('set-password', {}, {'t': password_token}) }}">
+                {{ get_site_url() }}{{ path_for('set-password', {}, {'t': password_token}) }}
+            </a></p>
+        </div>
+    </center>
 {% endblock %}

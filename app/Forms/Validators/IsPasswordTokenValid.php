@@ -6,10 +6,10 @@ use App\MVC\Models\User;
 use Zend\Validator\AbstractValidator;
 
 /**
- * Class IsPasswordTokenExistInDB
+ * Class IsPasswordTokenValid
  * @package App\Forms\Validators
  */
-class IsPasswordTokenExistInDB extends AbstractValidator
+class IsPasswordTokenValid extends AbstractValidator
 {
     const INVALID = "invalid";
 
@@ -29,11 +29,16 @@ class IsPasswordTokenExistInDB extends AbstractValidator
 
         $isValid = true;
 
+        if (!preg_match('/^[a-zA-Z0-9]{10,45}$/ui', $value)) {
+            $this->error('Invalid token syntax!');
+            return false;
+        }
+
         $users = $u->getAll([
             'password_token' => $value
         ]);
 
-        if (count($users)) {
+        if (count($users) <= 0) {
             $this->error(self::INVALID);
             $isValid = false;
         }
