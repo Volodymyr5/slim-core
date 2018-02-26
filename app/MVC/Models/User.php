@@ -23,7 +23,7 @@ class User extends CoreModel {
         $params['email'] = isset($params['email']) ? $params['email'] : null;
         $params['password_token'] = isset($params['password_token']) ? $params['password_token'] : null;
 
-        $query = \ORM::forTable(self::TABLE);
+        $query = $this->getQuery();
 
         if ($params['email']) {
             $query->where('email', $params['email']);
@@ -67,5 +67,14 @@ class User extends CoreModel {
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
+    }
+
+    protected function getQuery ()
+    {
+        $query = \ORM::forTable(self::TABLE);
+
+
+
+        return $query;
     }
 }

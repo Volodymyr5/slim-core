@@ -13,6 +13,8 @@ class IndexController extends CoreController
 {
     public function index($request, $response)
     {
+        $u = new User();
+
         $form = $this->getForm('App\Forms\UserForm');
 
         if ($request->isPost()) {
@@ -24,9 +26,9 @@ class IndexController extends CoreController
                 exit;
             }
         }
-        $users = User::count();
+        $users = $u->getAll();
 
-        var_dump($users);
+        var_dump(count($users));
 
         return $this->view->render($response, 'index\index\index.twig', [
             'form' => $form
