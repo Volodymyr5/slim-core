@@ -14,7 +14,7 @@ class UserEntity implements EntityInterface {
     protected $email;
     protected $password;
     protected $password_token;
-    protected $password_token_type;
+    protected $token_expiration;
     protected $created;
     protected $updated;
     protected $first_name;
@@ -87,17 +87,17 @@ class UserEntity implements EntityInterface {
     /**
      * @return mixed
      */
-    public function getPasswordTokenType()
+    public function getTokenExpiration()
     {
-        return $this->password_token_type;
+        return $this->token_expiration;
     }
 
     /**
-     * @param $password_token_type
+     * @param $token_expiration
      */
-    public function setPasswordTokenType($password_token_type)
+    public function setTokenExpiration($token_expiration)
     {
-        $this->password_token_type = $password_token_type;
+        $this->token_expiration = $token_expiration;
     }
 
     /**
@@ -174,7 +174,7 @@ class UserEntity implements EntityInterface {
             'email' => $this->getEmail(),
             'password' => $this->getPassword(),
             'password_token' => $this->getPasswordToken(),
-            'password_token_type' => $this->getPasswordTokenType(),
+            'token_expiration' => $this->getTokenExpiration(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated(),
             'first_name' => $this->getFirstName(),
@@ -191,7 +191,7 @@ class UserEntity implements EntityInterface {
         $this->setEmail((!empty($data['email']) ? $data['email'] : null));
         $this->setpassword((!empty($data['password']) ? $data['password'] : null));
         $this->setPasswordToken((!empty($data['password_token']) ? $data['password_token'] : null));
-        $this->setPasswordTokenType((!empty($data['password_token_type']) ? $data['password_token_type'] : null));
+        $this->setTokenExpiration((!empty($data['token_expiration']) ? $data['token_expiration'] : null));
         $this->setCreated((!empty($data['created']) ? $data['created'] : null));
         $this->setUpdated((!empty($data['updated']) ? $data['updated'] : null));
         $this->setFirstName((!empty($data['first_name']) ? $data['first_name'] : null));

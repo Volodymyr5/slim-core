@@ -48,7 +48,7 @@ class User extends CoreModel {
             $newUser->email = $e->getEmail();
             $newUser->password = $e->getPassword();
             $newUser->password_token = $e->getPasswordToken();
-            $newUser->password_token_type = $e->getPasswordTokenType();
+            $newUser->token_expiration = $e->getTokenExpiration();
             $newUser->save();
             $newUserId = $newUser->id;
 

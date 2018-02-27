@@ -2,11 +2,11 @@
 
 namespace App\MVC\Controllers\Auth;
 
-use App\Core\Constant;
 use \App\Core\CoreController;
 use App\Forms\Validators\IsPasswordTokenValid;
 use App\MVC\Entity\UserEntity;
 use App\MVC\Models\User;
+use Slim\App;
 
 /**
  * Class IndexController
@@ -14,6 +14,12 @@ use App\MVC\Models\User;
  */
 class IndexController extends CoreController
 {
+    /**
+     * @param $request
+     * @param $response
+     * @return mixed
+     * @throws \Exception
+     */
     public function index($request, $response)
     {
         $u = new User();
@@ -75,7 +81,7 @@ class IndexController extends CoreController
                     'created' => date('Y-m-d H:i:s'),
                     'updated' => date('Y-m-d H:i:s'),
                     'password_token' => md5(date('U') . $data['first_name'] . date('YmdHis')),
-                    'password_token_type' => Constant::USER_PASSWORD_TOKEN_TYPE_REGISTER,
+                    'token_expiration' => date('Y-m-d H:i:s', strtotime('now + 12 hours')),
                     'first_name' => $data['first_name'],
                     'last_name' => $data['last_name'],
                 ]);
@@ -131,6 +137,16 @@ class IndexController extends CoreController
 
         // set token
         $form->get('token')->setValue($token);
+
+        if ($request->isPost()) {
+            $data = $request->getParams();
+            $form->setData($data);
+            $isValid = $form->isValid();
+            if ($isValid) {
+                echo 'Form valid';
+                exit;
+            }
+        }
 
         return $this->view->render($response, 'auth\index\set-password.twig', [
             'form' => $form,
