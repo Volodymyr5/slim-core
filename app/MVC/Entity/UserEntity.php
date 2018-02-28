@@ -169,7 +169,7 @@ class UserEntity implements EntityInterface {
      */
     public function toArray()
     {
-        return[
+        $dirtyData = [
             'id' => $this->getId(),
             'email' => $this->getEmail(),
             'password' => $this->getPassword(),
@@ -180,6 +180,15 @@ class UserEntity implements EntityInterface {
             'first_name' => $this->getFirstName(),
             'last_name' => $this->getLastName(),
         ];
+
+        $data = [];
+        foreach ($dirtyData as $name => $val) {
+            if (!is_null($val)) {
+                $data[$name] = $val;
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -187,14 +196,14 @@ class UserEntity implements EntityInterface {
      */
     public function exchangeArray(array $data)
     {
-        $this->setId((!empty($data['id']) ? $data['id'] : null));
-        $this->setEmail((!empty($data['email']) ? $data['email'] : null));
-        $this->setpassword((!empty($data['password']) ? $data['password'] : null));
-        $this->setPasswordToken((!empty($data['password_token']) ? $data['password_token'] : null));
-        $this->setTokenExpiration((!empty($data['token_expiration']) ? $data['token_expiration'] : null));
-        $this->setCreated((!empty($data['created']) ? $data['created'] : null));
-        $this->setUpdated((!empty($data['updated']) ? $data['updated'] : null));
-        $this->setFirstName((!empty($data['first_name']) ? $data['first_name'] : null));
-        $this->setLastName((!empty($data['last_name']) ? $data['last_name'] : null));
+        $this->setId((isset($data['id']) ? $data['id'] : null));
+        $this->setEmail((isset($data['email']) ? $data['email'] : null));
+        $this->setpassword((isset($data['password']) ? $data['password'] : null));
+        $this->setPasswordToken((isset($data['password_token']) ? $data['password_token'] : null));
+        $this->setTokenExpiration((isset($data['token_expiration']) ? $data['token_expiration'] : null));
+        $this->setCreated((isset($data['created']) ? $data['created'] : null));
+        $this->setUpdated((isset($data['updated']) ? $data['updated'] : null));
+        $this->setFirstName((isset($data['first_name']) ? $data['first_name'] : null));
+        $this->setLastName((isset($data['last_name']) ? $data['last_name'] : null));
     }
 }

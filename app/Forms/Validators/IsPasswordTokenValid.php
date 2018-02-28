@@ -35,8 +35,12 @@ class IsPasswordTokenValid extends AbstractValidator
         }
 
         $users = $u->getAll([
-            'password_token' => $value
+            'password_token' => $value,
         ]);
+
+        if (isset($users[0]['token_expiration']) && $users[0]['token_expiration'] < date('U')) {
+            $users = [];
+        }
 
         if (count($users) <= 0) {
             $this->error(self::INVALID);

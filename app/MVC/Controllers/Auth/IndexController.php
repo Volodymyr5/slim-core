@@ -81,7 +81,7 @@ class IndexController extends CoreController
                     'created' => date('Y-m-d H:i:s'),
                     'updated' => date('Y-m-d H:i:s'),
                     'password_token' => md5(date('U') . $data['first_name'] . date('YmdHis')),
-                    'token_expiration' => date('Y-m-d H:i:s', strtotime('now + 12 hours')),
+                    'token_expiration' => date('U', strtotime('now + 12 hours')),
                     'first_name' => $data['first_name'],
                     'last_name' => $data['last_name'],
                 ]);
@@ -129,6 +129,8 @@ class IndexController extends CoreController
      */
     public function setPassword($request, $response)
     {
+        $u = new User();
+
         $token = $request->getParam('t', '');
 
         $isPasswordTokenValid = new IsPasswordTokenValid();
@@ -143,8 +145,38 @@ class IndexController extends CoreController
             $form->setData($data);
             $isValid = $form->isValid();
             if ($isValid) {
-                echo 'Form valid';
-                exit;
+                $token = !empty($data['token']) ? $data['token'] : null;
+                $user = $u->getAll([
+                    'token' => $token
+                ]);
+                if (!empty($user[0]['id']) && !empty($data['password'])) {
+                    $ue = new UserEntity();
+                    $ue->exchangeArray([
+                        'id' => $user[0]['id'],
+                        'password' => $data['password'],
+                        'password_token' => '',
+                        'token_expiration' => 0,
+                    ]);
+
+                    try {
+                        $u->modify($ue);
+                    } catch (\Exception $e) {
+                        $this->container->flash->addMessage(
+                            'alert-warning',
+                            '<h3>Something go wrong, try again!</h3>'
+                        );
+                        return $response->withRedirect($this->router->pathFor('register'));
+                    }
+
+                    $this->container->flash->addMessage(
+                        'alert-success',
+                        '<h3>Your password successfully changed!</h3>'
+                    );
+
+                    return $response->withRedirect($this->router->pathFor('login'));
+                } else {
+                    return $response->withRedirect($this->router->pathFor('set-password'));
+                }
             }
         }
 

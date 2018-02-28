@@ -69,12 +69,43 @@ class User extends CoreModel {
         }
     }
 
+    /**
+     * @param UserEntity $e
+     * @throws \Exception
+     */
+    public function modify(UserEntity $e)
+    {
+        try {
+            $data = $e->toArray();
+
+            $user = \ORM::forTable(self::TABLE)->findOne($e->getId());
+
+            if (isset($data['password'])) {
+                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
+            $user->set($data);
+            $user->save();
+
+            if (
+                isset($data['first_name']) ||
+                isset($data['last_name'])
+            ) {
+                $userMeta = \ORM::forTable(self::USER_META_TABLE)->where('user_id', $e->getId())->findOne();
+                $userMeta->first_name = $e->getFirstName();
+                $userMeta->last_name = $e->getLastName();
+                $userMeta->save();
+            }
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
     protected function getQuery ()
     {
         $query = \ORM::forTable(self::TABLE);
 
-
-
         return $query;
     }
 }
+
