@@ -101,6 +101,9 @@ class User extends CoreModel {
         }
     }
 
+    /**
+     * @return \ORM
+     */
     protected function getQuery ()
     {
         $query = \ORM::forTable(self::TABLE);

@@ -19,7 +19,6 @@ class Logger
         if (is_array($message)) {
             $message = var_export($message, true);
             $message = strval($message);
-            $message = str_replace("\n", "", $message);
         }
 
         $message = "{$logDateTime} --- {$message}\n";
