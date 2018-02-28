@@ -19,19 +19,19 @@ class LoginController extends CoreController
      */
     public function index($request, $response)
     {
-        $u = new User();
-
-        $form = $this->getForm('App\Forms\UserForm');
+        $form = $this->getForm('App\Forms\LoginForm');
 
         if ($request->isPost()) {
             $data = $request->getParams();
             $form->setData($data);
             $isValid = $form->isValid();
             if ($isValid) {
+                $this->container->flash->addMessage(
+                    'alert-success',
+                    '<h3>You successfully logged in!</h3>'
+                );
 
-                echo 'login';
-
-                exit;
+                return $response->withRedirect($this->router->pathFor('home'));
             }
         }
 

@@ -12,16 +12,13 @@
                     <form method="POST" role="form">
                         {{ csrf_tokens() | raw }}
                         <div class="uk-margin">
-                            {#{{ formRow(form.get('first_name')) }}#}
+                            {{ formRow(form.get('email')) }}
                         </div>
                         <div class="uk-margin">
-                            {#{{ formRow(form.get('last_name')) }}#}
-                        </div>
-                        <div class="uk-margin">
-                            {#{{ formRow(form.get('email')) }}#}
+                            {{ formRow(form.get('password')) }}
                         </div>
 
-                        {#{{ formRow(form.get('submit')) }}#}
+                        {{ formRow(form.get('submit')) }}
                     </form>
                 </div>
             </div>

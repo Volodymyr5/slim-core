@@ -3,13 +3,8 @@
     <div class="uk-section uk-padding-remove-vertical">
         <div class="uk-container uk-container-expand">
             index / index / index . twig
-            <form method="POST" role="form" class="uk-width-1-4">
-                {{ csrf_tokens() | raw }}
-                <div class="uk-margin">
-                    {{ formRow(form.get('email')) }}
-                </div>
-                {{ formElement(form.get('submit')) }}
-            </form>
+
+            {{ dump(users) }}
         </div>
     </div>
 {% endblock %}

@@ -49,7 +49,7 @@ class SetPasswordController extends CoreController
                     $ue = new UserEntity();
                     $ue->exchangeArray([
                         'id' => $user[0]['id'],
-                        'password' => $data['password'],
+                        'password' => password_hash($data['password'], PASSWORD_DEFAULT),
                         'password_token' => '',
                         'token_expiration' => 0,
                     ]);

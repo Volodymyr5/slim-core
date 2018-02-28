@@ -21,6 +21,7 @@ class User extends CoreModel {
     public function getAll($params = [])
     {
         $params['email'] = isset($params['email']) ? $params['email'] : null;
+        $params['password'] = isset($params['password']) ? $params['password'] : null;
         $params['password_token'] = isset($params['password_token']) ? $params['password_token'] : null;
 
         $query = $this->getQuery();
@@ -29,11 +30,26 @@ class User extends CoreModel {
             $query->where('email', $params['email']);
         }
 
+        if ($params['password']) {
+            $query->where('password', $params['password']);
+        }
+
         if ($params['password_token']) {
             $query->where('password_token', $params['password_token']);
         }
 
         return  $query->findArray();
+    }
+
+    /**
+     * @param $email
+     * @return bool|\ORM
+     */
+    public function getByEmail($email)
+    {
+        $query = $this->getQuery();
+
+        return $query->where('email', $email)->findOne();
     }
 
     /**
@@ -79,11 +95,6 @@ class User extends CoreModel {
             $data = $e->toArray();
 
             $user = \ORM::forTable(self::TABLE)->findOne($e->getId());
-
-            if (isset($data['password'])) {
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            }
-
             $user->set($data);
             $user->save();
 

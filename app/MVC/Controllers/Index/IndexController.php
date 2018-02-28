@@ -11,27 +11,19 @@ use App\MVC\Models\User;
  */
 class IndexController extends CoreController
 {
+    /**
+     * @param $request
+     * @param $response
+     * @return
+     */
     public function index($request, $response)
     {
         $u = new User();
 
-        $form = $this->getForm('App\Forms\UserForm');
-
-        if ($request->isPost()) {
-            $data = $request->getParams();
-            $form->setData($data);
-            $isValid = $form->isValid();
-            if ($isValid) {
-                echo "Success!";
-                exit;
-            }
-        }
         $users = $u->getAll();
 
-        var_dump(count($users));
-
         return $this->view->render($response, 'index\index\index.twig', [
-            'form' => $form
+            'users' => $users
         ]);
     }
 }

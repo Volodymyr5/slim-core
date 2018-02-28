@@ -11,10 +11,10 @@ use Zend\Validator\Identical;
 use Zend\Validator\StringLength;
 
 /**
- * Class RegisterForm
+ * Class LoginForm
  * @package App\Forms
  */
-class RegisterForm extends Form implements InputFilterProviderInterface
+class LoginForm extends Form implements InputFilterProviderInterface
 {
     /**
      * Init form
@@ -22,30 +22,6 @@ class RegisterForm extends Form implements InputFilterProviderInterface
     public function init()
     {
         $formName = $this->getName() ? $this->getName() . '-' : '';
-
-        // First name
-        $firstName = new Element\Text('first_name');
-        $firstName->setLabelAttributes([
-            'for' => $formName . $firstName->getAttribute('name'),
-        ]);
-        $firstName->setAttributes([
-            'id' => $formName . $firstName->getAttribute('name'),
-            'class' => 'uk-input',
-            'required' => 'required',
-            'autofocus' => 'autofocus',
-            'placeholder' => 'First name',
-        ]);
-
-        // Last name
-        $lastName = new Element\Text('last_name');
-        $lastName->setLabelAttributes([
-            'for' => $formName . $lastName->getAttribute('name'),
-        ]);
-        $lastName->setAttributes([
-            'id' => $formName . $lastName->getAttribute('name'),
-            'class' => 'uk-input',
-            'placeholder' => 'Last name',
-        ]);
 
         // Email
         $email = new Element\Email('email');
@@ -59,6 +35,18 @@ class RegisterForm extends Form implements InputFilterProviderInterface
             'placeholder' => 'Email',
         ]);
 
+        // Password
+        $password = new Element\Password('password');
+        $password->setLabelAttributes([
+            'for' => $formName . $password->getAttribute('name'),
+        ]);
+        $password->setAttributes([
+            'id' => $formName . $password->getAttribute('name'),
+            'class' => 'uk-input',
+            'required' => 'required',
+            'placeholder' => 'Password',
+        ]);
+
         // Submit button
         $submit = new Element\Submit('submit');
         $submit->setAttributes([
@@ -69,9 +57,8 @@ class RegisterForm extends Form implements InputFilterProviderInterface
         ]);
 
         // Add elements to form
-        $this->add($firstName);
-        $this->add($lastName);
         $this->add($email);
+        $this->add($password);
         $this->add($submit);
     }
 
@@ -80,8 +67,8 @@ class RegisterForm extends Form implements InputFilterProviderInterface
      */
     public function getInputFilterSpecification()
     {
-        // First Name
-        $firstName = [
+        // Email
+        $email = [
             'required' => true,
             'filters' => [
                 ['name' => 'StripTags'],
@@ -101,20 +88,11 @@ class RegisterForm extends Form implements InputFilterProviderInterface
                         ]
                     ]
                 ],
-                new CustomAlpha([
-                    'messages' => [
-                        CustomAlpha::INVALID => 'The field must contains only characters',
-                    ]
-                ])
-            ],
+            ]
         ];
 
-        // Last Name
-        $lastName = $firstName;
-        $lastName['required'] = false;
-
-        // Email
-        $email = [
+        // Password
+        $password = [
             'required' => true,
             'filters' => [
                 ['name' => 'StripTags'],
@@ -122,25 +100,25 @@ class RegisterForm extends Form implements InputFilterProviderInterface
                 ['name' => 'StripNewLines'],
             ],
             'validators' => [
-                ['name' => 'EmailAddress'],
-                ['name' => '\App\Forms\Validators\UniqueEmailInDB'],
                 [
                     'name' => 'StringLength',
                     'options' => [
                         'encoding' => 'UTF-8',
-                        'max' => 128,
+                        'min' => 2,
+                        'max' => 255,
                         'messages' => [
+                            StringLength::TOO_SHORT => 'Minimum length - %min% characters',
                             StringLength::TOO_LONG => 'Maximum length - %max% characters',
                         ]
                     ]
-                ]
-            ]
+                ],
+                ['name' => '\App\Forms\Validators\EmailPasswordInDB'],
+            ],
         ];
 
         return [
-            'first_name' => $firstName,
-            'last_name' => $lastName,
             'email' => $email,
+            'password' => $password,
         ];
     }
 }
