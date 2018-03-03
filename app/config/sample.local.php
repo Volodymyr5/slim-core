@@ -14,6 +14,21 @@ return [
             'password' => 'password',
         ],
     ],
+    'jwt' => [
+        'access_token' => 60*10,
+        'refresh_token' => 60*60*24,
+        'public' =>
+<<<EOT
+-----BEGIN PUBLIC KEY-----
+-----END PUBLIC KEY-----
+EOT
+        ,
+        'private' =>
+<<<EOT
+-----BEGIN RSA PRIVATE KEY-----
+-----END RSA PRIVATE KEY-----
+EOT
+    ],
     'smtp' => [
         // Debug mode will echo connection status alerts to
         // the screen throughout the email sending process.
