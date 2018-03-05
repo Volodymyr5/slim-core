@@ -46,6 +46,50 @@ class JwtAuth
 
     public function isLogged()
     {
+
+    }
+
+    public function updateVisitor()
+    {
+        /*if (hasRT) {
+            if (!checkRT) {
+                fraudAttempt();
+            }
+
+            if (AT && !expAt) {
+                if (!checkAT) {
+                    fraudAttempt();
+                }
+
+                return true;
+            } else {
+                createAT from RT
+            }
+        } else {
+            createAT from BRO
+            createRT from BRO
+        }
+
+        UPDATE DB token
+        UPDATE DB history
+
+        UPDATE COOKIE
+
+        UPDATE SESSION
+
+        function fraudAttempt() {
+//            fraudAttempt
+
+//            clearDB
+//            clearToken
+//            clearHistory
+//            clearCookie
+//            clearSession
+
+            updateVisitor();
+        }*/
+
+
         var_dump(
             $this->getBrowserForToken(),
             $this->getIpForToken()
