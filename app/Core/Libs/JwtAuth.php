@@ -39,7 +39,7 @@ class JwtAuth
             throw new \Exception('Error. Public or private token not set in local.php!');
         }
 
-        if (empty($this->accessTokenExpire) || empty($this->refreshTokenTExpire)) {
+        if (empty($this->accessTokenExpire) || empty($this->refreshTokenExpire)) {
             throw new \Exception('Error. Access token Expire or Refresh token Expire token not set in local.php!');
         }
     }
