@@ -57,3 +57,8 @@ $view->getEnvironment()->registerUndefinedFunctionCallback(
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
+
+// Inject JWT Auth
+$container['user'] = function () use ($container) {
+    return new \App\Core\Libs\Auth($container);
+};

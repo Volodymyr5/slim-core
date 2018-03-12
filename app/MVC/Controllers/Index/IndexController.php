@@ -18,9 +18,6 @@ class IndexController extends CoreController
      */
     public function index($request, $response)
     {
-        $this->auth->isLogged();
-
-        exit;
         $u = new User();
 
         $users = $u->getAll();

@@ -2,6 +2,9 @@
 
 namespace App\Core\Libs;
 
+/**
+ *
+ */
 class SMTP {
 
     // config

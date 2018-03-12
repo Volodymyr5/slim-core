@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Core;
-use App\Core\Libs\JwtAuth;
 use App\Core\Libs\SMTP;
 use Psr\Container\ContainerInterface;
 
@@ -13,16 +12,12 @@ class CoreController
 {
     protected $container;
 
-    protected $auth;
-
     /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
-        $this->auth = new JwtAuth($container);
     }
 
     /**

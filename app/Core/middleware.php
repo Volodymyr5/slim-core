@@ -20,3 +20,10 @@ $app->add(function ($request, $response, $next) use ($container) {
     return $next($request, $response);
 });
 
+// JWT auth processing
+$app->add(function ($request, $response, $next) use ($container) {
+    $container->user->update();
+    //$container->user->update();
+    // Continue middleware chain
+    return $next($request, $response);
+});
