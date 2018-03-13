@@ -45,11 +45,13 @@ class Token extends CoreModel {
     {
         $query = $this->getQuery();
         $result = $query->where([
-            'ip', $ip,
-            'browser', $browser
-        ])->findOne();
+            'ip' => $ip,
+            'browser' => $browser
+        ])->limit(1)->findArray();
 
-        return (array)$result;
+        var_dump('getByIpBrowser', $result);
+
+        return !empty($result[0]['id']) ? $result[0] : null;
     }
 
     /**
@@ -59,7 +61,11 @@ class Token extends CoreModel {
     public function createOnDublicateUpdate(TokenEntity $e)
     {
         $token = $this->getByIpBrowser($e->getIp(), $e->getBrowser());
-        if (empty($token['id'])) {
+
+        if (!empty($token['id'])) {
+            var_dump('USER ID: ' . $token['id']);
+
+            $e->setId($token['id']);
             $this->modify($e);
         } else {
             $this->create($e);

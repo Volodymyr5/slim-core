@@ -150,6 +150,9 @@ class Auth
         } else {
             $userIp = $this->getIpForToken();
             $userAgent = $this->getBrowserForToken();
+
+            $userIp = $this->hashString($userIp);
+            $userAgent = $this->hashString($userAgent);
         }
 
         if (
@@ -160,8 +163,8 @@ class Auth
         }
 
         $tokenArray = [
-            'tp' => hash('sha256', $userIp),
-            'tb' => hash('sha256', $userAgent),
+            'tp' => $userIp,
+            'tb' => $userAgent,
             'te' => intval(date('U') + $this->accessTokenExpire),
         ];
 
@@ -191,8 +194,8 @@ class Auth
         $token = !is_array($token) ? $this->readToken($token) : $token;
 
         return ($token &&
-            isset($token['tb']) && $token['tb'] == hash('sha256', $userAgent) &&
-            isset($token['tp']) && $token['tp'] == hash('sha256', $userIp)
+            isset($token['tb']) && $token['tb'] == $this->hashString($userAgent) &&
+            isset($token['tp']) && $token['tp'] == $this->hashString($userIp)
         );
     }
 
@@ -224,7 +227,7 @@ class Auth
      * @param $token
      * @return array|null|object
      */
-    private function readToken($token)
+    public function readToken($token)
     {
         try {
             $tokenArray = JWT::decode($token, $this->publicKey, array('RS256'));
@@ -243,12 +246,14 @@ class Auth
     {
         $t = new Token();
 
+        var_dump('update');
+
         $newToken = new TokenEntity();
         $newToken->exchangeArray([
             'token' => $refreshToken,
             'ip' => $this->getIpForToken(),
             'browser' => $this->getBrowserForToken(),
-            'expire' => $this->refreshTokenExpire,
+            'expire' => time() + $this->refreshTokenExpire,
         ]);
 
         try {
@@ -256,6 +261,8 @@ class Auth
 
             return true;
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
+
             return false;
         }
     }
@@ -302,6 +309,15 @@ class Auth
         unset($_SESSION['at']);
 
         $this->update();
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    private function hashString($string)
+    {
+        return hash('sha256', $string);
     }
 
 
