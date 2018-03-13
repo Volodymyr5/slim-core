@@ -90,6 +90,8 @@ class Auth
         }
         $this->updateTokenInDB($tokens['refresh_token']);
         $this->setCookies($tokens);
+
+        return true;
     }
 
     /**
