@@ -68,7 +68,7 @@ class Token extends CoreModel {
 
     /**
      * @param TokenEntity $e
-     * @return mixed
+     * @return array|mixed|null
      * @throws \Exception
      */
     public function create(TokenEntity $e)

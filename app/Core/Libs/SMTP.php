@@ -3,7 +3,8 @@
 namespace App\Core\Libs;
 
 /**
- *
+ * Class SMTP
+ * @package App\Core\Libs
  */
 class SMTP {
 
@@ -42,6 +43,11 @@ class SMTP {
     protected $encoding = '7bit';
     protected $wordwrap = 70;
 
+    /**
+     * SMTP constructor.
+     * @param $config
+     * @param null $connection
+     */
     public function __construct($config, $connection = null)
     {
         // set config
@@ -65,6 +71,10 @@ class SMTP {
         $this->localhost = $this->config('localhost');
     }
 
+    /**
+     * @param $email
+     * @param null $name
+     */
     public function from($email, $name = null)
     {
         // set
@@ -74,6 +84,10 @@ class SMTP {
         );
     }
 
+    /**
+     * @param $email
+     * @param null $name]
+     */
     public function reply($email, $name = null)
     {
         // set
@@ -83,12 +97,20 @@ class SMTP {
         );
     }
 
+    /**
+     * @param $email
+     * @param null $name
+     */
     public function replyto($email, $name = null)
     {
         // alias
         $this->reply($email, $name);
     }
 
+    /**
+     * @param $email
+     * @param null $name
+     */
     public function to($email, $name = null)
     {
         // set
@@ -98,6 +120,10 @@ class SMTP {
         );
     }
 
+    /**
+     * @param $email
+     * @param null $name
+     */
     public function cc($email, $name = null)
     {
         // set
@@ -107,6 +133,10 @@ class SMTP {
         );
     }
 
+    /**
+     * @param $email
+     * @param null $name
+     */
     public function bcc($email, $name = null)
     {
         // set
@@ -116,28 +146,43 @@ class SMTP {
         );
     }
 
+    /**
+     * @param $html
+     */
     public function body($html)
     {
         $this->body = $html;
         #$this->text = $this->normalize($html); // merge request was wrong to put this here
     }
 
+    /**
+     * @param $text
+     */
     public function text($text)
     {
         $this->text = $this->normalize(wordwrap(strip_tags($text), $this->wordwrap));
     }
 
+    /**
+     * @param $subject
+     */
     public function subject($subject)
     {
         $this->subject = $subject;
     }
 
+    /**
+     * @param $path
+     */
     public function attach($path)
     {
         // add
         $this->attachments[] = $path;
     }
 
+    /**
+     * @return bool
+     */
     public function send_text()
     {
         // text mode
@@ -147,6 +192,9 @@ class SMTP {
         return $this->send();
     }
 
+    /**
+     * @return bool
+     */
     public function send()
     {
         // connect to server
@@ -174,6 +222,9 @@ class SMTP {
         return $result;
     }
 
+    /**
+     * @return bool
+     */
     protected function smtp_connect()
     {
         // modify url, if needed
@@ -241,6 +292,9 @@ class SMTP {
         return true;
     }
 
+    /**
+     * @return string
+     */
     protected function smtp_construct()
     {
         // set unique boundary
@@ -375,6 +429,9 @@ class SMTP {
         return $email;
     }
 
+    /**
+     * @return bool
+     */
     protected function smtp_deliver()
     {
         // request
@@ -414,6 +471,9 @@ class SMTP {
         }
     }
 
+    /**
+     *
+     */
     protected function smtp_disconnect()
     {
         // request
@@ -426,12 +486,18 @@ class SMTP {
         fclose($this->connection);
     }
 
+    /**
+     * @return int
+     */
     protected function code()
     {
         // filter code from response
         return (int) substr($this->response(), 0, 3);
     }
 
+    /**
+     * @param $string-
+     */
     protected function request($string)
     {
         // report
@@ -441,6 +507,9 @@ class SMTP {
         fputs($this->connection, $string);
     }
 
+    /**
+     * @return string
+     */
     protected function response()
     {
         // get response
@@ -458,6 +527,10 @@ class SMTP {
         return $response;
     }
 
+    /**
+     * @param $recipient
+     * @return string
+     */
     protected function format($recipient)
     {
         // format "name <email>"
@@ -471,6 +544,10 @@ class SMTP {
         }
     }
 
+    /**
+     * @param $lines
+     * @return string
+     */
     private function normalize($lines)
     {
         // Normalize content to match RFC-821 max 1000 characters line length including the CRLF
@@ -489,6 +566,11 @@ class SMTP {
         return $content;
     }
 
+    /**
+     * @param $coords
+     * @param null $default
+     * @return array|mixed|null
+     */
     private function config($coords, $default = null)
     {
         return ex($this->config, $coords, $default);

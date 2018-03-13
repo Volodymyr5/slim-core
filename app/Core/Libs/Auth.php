@@ -4,6 +4,7 @@ namespace App\Core\Libs;
 use App\MVC\Entity\TokenEntity;
 use App\MVC\Models\Token;
 use Firebase\JWT\JWT;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -23,6 +24,7 @@ class Auth
     protected $refreshTokenExpire;
 
     /**
+     * Auth constructor.
      * @param ContainerInterface $container
      * @throws \Exception
      */
@@ -51,6 +53,9 @@ class Auth
 
     }
 
+    /**
+     * @return bool
+     */
     public function update()
     {
         $tokens = $this->getTokensFromCookie();
@@ -108,8 +113,12 @@ class Auth
      */
     private function getTokensFromCookie()
     {
-        $request = $this->container->get('request');
-        $cookies = $request->getCookieParams();
+        try {
+            $request = $this->container->get('request');
+            $cookies = $request->getCookieParams();
+        } catch (ContainerExceptionInterface $e) {
+            $result = [];
+        }
 
         $result['access_token'] = !empty($cookies['at']) ? $cookies['at'] : null;
         $result['refresh_token'] = !empty($cookies['rt']) ? $cookies['rt'] : null;
@@ -128,12 +137,12 @@ class Auth
 
     /**
      * @param null $refreshToken
-     * @return array|bool
+     * @return bool
      */
     private function createTokens($refreshToken = null)
     {
         if ($refreshToken) {
-            $refreshToken = is_array($refreshToken) ? $this->readToken($refreshToken) : $refreshToken;
+            $refreshToken = !is_array($refreshToken) ? $this->readToken($refreshToken) : $refreshToken;
             $userIp = $refreshToken['tp'];
             $userAgent = $refreshToken['tb'];
         } else {
@@ -177,11 +186,11 @@ class Auth
             return false;
         }
 
-        $token = is_array($token) ? $this->readToken($token) : $token;
+        $token = !is_array($token) ? $this->readToken($token) : $token;
 
         return ($token &&
-            isset($token['tb']) && $token['tb'] == hash('sha256', $userIp) &&
-            isset($token['tp']) && $token['tp'] == hash('sha256', $userAgent)
+            isset($token['tb']) && $token['tb'] == hash('sha256', $userAgent) &&
+            isset($token['tp']) && $token['tp'] == hash('sha256', $userIp)
         );
     }
 
@@ -191,14 +200,14 @@ class Auth
      */
     private function checkTokenExpire($token)
     {
-        $token = is_array($token) ? $this->readToken($token) : $token;
+        $token = !is_array($token) ? $this->readToken($token) : $token;
 
         return $token && isset($token['te']) && is_numeric($token['te']) && $token['te'] < date('U');
     }
 
     /**
      * @param $tokenArray
-     * @return string|boolean
+     * @return bool|string
      */
     private function createToken($tokenArray)
     {
@@ -226,6 +235,7 @@ class Auth
 
     /**
      * @param $refreshToken
+     * @return bool
      */
     private function updateTokenInDB($refreshToken)
     {
@@ -239,11 +249,17 @@ class Auth
             'expire' => $this->refreshTokenExpire,
         ]);
 
-        $t->createOnDublicateUpdate($refreshToken);
+        try {
+            $t->createOnDublicateUpdate($newToken);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
-     * @return bool|string
+     * @return bool
      */
     private function getBrowserForToken()
     {
@@ -276,6 +292,7 @@ class Auth
      */
     private function fraudAttempt($token)
     {
+        $token = $this->readToken($token);
         $this->clearCookies();
         // clearTokenFromDB
         //clearHistory

@@ -13,6 +13,7 @@ class CoreController
     protected $container;
 
     /**
+     * CoreController constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -35,7 +36,7 @@ class CoreController
 
     /**
      * @param $formNameWithNamespace
-     * @return \Zend\Form\FormInterface
+     * @return mixed
      */
     protected function getForm($formNameWithNamespace)
     {

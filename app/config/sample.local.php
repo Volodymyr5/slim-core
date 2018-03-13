@@ -4,7 +4,7 @@ return [
     'db' => [
         // SQLight
         'sqlight' => [
-            'file_path' => __DIR__ . '/db/core.db',
+            'file_path' => dirname(__DIR__) . '/db/core.db',
         ],
         // MySql
         'mysql' => [
