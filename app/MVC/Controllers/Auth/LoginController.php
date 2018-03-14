@@ -14,7 +14,6 @@ class LoginController extends CoreController
      * @param $request
      * @param $response
      * @return mixed
-     * @throws \Exception
      */
     public function index($request, $response)
     {

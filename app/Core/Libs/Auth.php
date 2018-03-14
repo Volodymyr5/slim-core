@@ -50,7 +50,7 @@ class Auth
 
     public function identity()
     {
-        $t = new Token($this->container);
+        $t = new Token();
         $user = $t->getByIpBrowser($this->getIpForToken(), $this->getBrowserForToken());
 
 
@@ -248,7 +248,7 @@ class Auth
      */
     private function updateTokenInDB($refreshToken)
     {
-        $t = new Token($this->container);
+        $t = new Token();
 
         $newToken = new TokenEntity();
         $newToken->exchangeArray([
@@ -316,7 +316,7 @@ class Auth
     }
 
     /**
-     * @param string $string
+     * @param $string
      * @return string
      */
     private function hashString($string)

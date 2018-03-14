@@ -15,12 +15,15 @@ class RegisterController extends CoreController
      * @param $request
      * @param $response
      * @return mixed
-     * @throws \Exception
      */
     public function index($request, $response)
     {
         $u = $this->getModel('User');
         $form = $this->getForm('App\Forms\RegisterForm');
+
+        $t = $this->getModel('Token');
+
+        $t->getByIpBrowser(123, 123);
 
         if ($request->isPost()) {
             $data = $request->getParams();

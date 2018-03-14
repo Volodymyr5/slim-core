@@ -47,8 +47,8 @@ class CoreController
     }
 
     /**
-     * @param string $modelName
-     * @return object|bool
+     * @param $modelName
+     * @return bool
      */
     protected function getModel($modelName)
     {
