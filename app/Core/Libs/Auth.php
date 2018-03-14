@@ -50,11 +50,22 @@ class Auth
 
     public function identity()
     {
-        $t = new Token();
-        $user = $t->getByIpBrowser($this->getIpForToken(), $this->getBrowserForToken());
+        $tokens = $this->getTokensFromCookie();
+        $at = !empty($tokens['access_token']) ? $this->readToken($tokens['access_token']) : null;
+        $rt = !empty($tokens['refresh_token']) ? $this->readToken($tokens['refresh_token']) : null;
+
+        $at = !empty($at['te']) ? date('H:i:s d.m.Y', $at['te']) : null;
+        $rt = !empty($rt['te']) ? date('H:i:s d.m.Y', $rt['te']) : null;
+
+        var_dump(date('H:i:s d.m.Y', time()), $at, $rt);
 
 
-        var_dump('users', $users);
+
+//        $t = new Token();
+//        $user = $t->getByIpBrowser($this->getIpForToken(), $this->getBrowserForToken());
+
+
+        //var_dump('users', $users);
     }
 
     /**
@@ -79,6 +90,7 @@ class Auth
                 if (!$tokens) {
                     return false;
                 }
+                $this->updateTokenInDB($tokens['refresh_token'], true);
                 $this->setCookies($tokens);
             }
         } else {
@@ -86,14 +98,13 @@ class Auth
             if (!$tokens) {
                 return false;
             }
+            $this->updateTokenInDB($tokens['refresh_token']);
             $this->setCookies($tokens);
         }
 
         if (empty($tokens['access_token']) || empty($tokens['refresh_token'])) {
             return false;
         }
-        $this->updateTokenInDB($tokens['refresh_token']);
-        $this->setCookies($tokens);
 
         return true;
     }
@@ -246,7 +257,7 @@ class Auth
      * @param $refreshToken
      * @return bool
      */
-    private function updateTokenInDB($refreshToken)
+    private function updateTokenInDB($refreshToken, $updateToken = false)
     {
         $t = new Token();
 
@@ -261,7 +272,11 @@ class Auth
         ]);
 
         try {
-            $t->createOnDublicateUpdate($newToken);
+            if ($updateToken) {
+                $t->createOnDublicateUpdate($newToken);
+            } else {
+                $t->create($newToken);
+            }
 
             return true;
         } catch (\Exception $e) {
@@ -305,7 +320,7 @@ class Auth
      */
     private function fraudAttempt($token)
     {
-        $token = $this->readToken($token);
+        //$token = $this->readToken($token);
         $this->clearCookies();
         // clearTokenFromDB
         //clearHistory

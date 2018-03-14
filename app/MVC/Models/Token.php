@@ -41,17 +41,19 @@ class Token extends CoreModel {
      * @param $browser
      * @return null
      */
-    public function getByIpBrowser($ip, $browser)
+    public function getByIpBrowser($ip, $browser, $checkExpiration = null)
     {
-        $tokenExpiration = time();
-
         $query = $this->getQuery();
         $query->where([
-                'ip' => $ip,
-                'browser' => $browser
-            ])
-            ->limit(1)
-            ->where_gt('expire', $tokenExpiration);
+            'ip' => $ip,
+            'browser' => $browser
+        ])
+        ->orderByDesc('end')
+        ->limit(1);
+
+        if ($checkExpiration) {
+            $query->where_gt('expire', time());
+        }
 
         $result = $query->findArray();
 
