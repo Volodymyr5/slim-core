@@ -3,7 +3,6 @@
 namespace App\MVC\Controllers\Auth;
 
 use \App\Core\CoreController;
-use App\MVC\Models\User;
 
 /**
  * Class LoginController

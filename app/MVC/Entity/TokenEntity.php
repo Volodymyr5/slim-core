@@ -11,9 +11,13 @@ use App\Core\EntityInterface;
 class TokenEntity implements EntityInterface {
 
     protected $id;
+    protected $user_id;
+    protected $visitor;
     protected $token;
     protected $ip;
     protected $browser;
+    protected $start;
+    protected $end;
     protected $expire;
 
     /**
@@ -30,6 +34,38 @@ class TokenEntity implements EntityInterface {
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @param $user_id
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisitor()
+    {
+        return $this->visitor;
+    }
+
+    /**
+     * @param $visitor
+     */
+    public function setVisitor($visitor)
+    {
+        $this->visitor = $visitor;
     }
 
     /**
@@ -83,6 +119,38 @@ class TokenEntity implements EntityInterface {
     /**
      * @return mixed
      */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param $start
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * @param $end
+     */
+    public function setEnd($end)
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getExpire()
     {
         return $this->expire;
@@ -96,7 +164,6 @@ class TokenEntity implements EntityInterface {
         $this->expire = $expire;
     }
 
-
     /**
      * @return array
      */
@@ -104,9 +171,13 @@ class TokenEntity implements EntityInterface {
     {
         $dirtyData = [
             'id' => $this->getId(),
+            'user_id' => $this->getUserId(),
+            'visitor' => $this->getVisitor(),
             'token' => $this->getToken(),
             'ip' => $this->getIp(),
             'browser' => $this->getBrowser(),
+            'start' => $this->getStart(),
+            'end' => $this->getEnd(),
             'expire' => $this->getExpire(),
         ];
 
@@ -126,9 +197,13 @@ class TokenEntity implements EntityInterface {
     public function exchangeArray(array $data)
     {
         $this->setId((isset($data['id']) ? $data['id'] : null));
+        $this->setUserId((isset($data['user_id']) ? $data['user_id'] : null));
+        $this->setVisitor((isset($data['visitor']) ? $data['visitor'] : null));
         $this->setToken((isset($data['token']) ? $data['token'] : null));
         $this->setIp((isset($data['ip']) ? $data['ip'] : null));
         $this->setBrowser((isset($data['browser']) ? $data['browser'] : null));
+        $this->setStart((isset($data['start']) ? $data['start'] : null));
+        $this->setEnd((isset($data['end']) ? $data['end'] : null));
         $this->setExpire((isset($data['expire']) ? $data['expire'] : null));
     }
 }

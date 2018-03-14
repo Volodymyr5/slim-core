@@ -47,6 +47,21 @@ class CoreController
     }
 
     /**
+     * @param string $modelName
+     * @return object|bool
+     */
+    protected function getModel($modelName)
+    {
+        if (class_exists('App\\MVC\\Models\\' . $modelName)) {
+            $needModel = 'App\\MVC\\Models\\' . $modelName;
+
+            return new $needModel($this->container);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @param bool $configName
      * @return array|mixed
      */

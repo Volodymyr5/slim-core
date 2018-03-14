@@ -43,13 +43,17 @@ class Token extends CoreModel {
      */
     public function getByIpBrowser($ip, $browser)
     {
-        $query = $this->getQuery();
-        $result = $query->where([
-            'ip' => $ip,
-            'browser' => $browser
-        ])->limit(1)->findArray();
+        $tokenExpiration = time();
 
-        var_dump('getByIpBrowser', $result);
+        $query = $this->getQuery();
+        $result = $query
+            ->where([
+                'ip' => $ip,
+                'browser' => $browser
+            ])
+            ->limit(1)
+            ->where_gt('expire', $tokenExpiration)
+            ->findArray();
 
         return !empty($result[0]['id']) ? $result[0] : null;
     }
@@ -63,8 +67,6 @@ class Token extends CoreModel {
         $token = $this->getByIpBrowser($e->getIp(), $e->getBrowser());
 
         if (!empty($token['id'])) {
-            var_dump('USER ID: ' . $token['id']);
-
             $e->setId($token['id']);
             $this->modify($e);
         } else {
@@ -80,12 +82,10 @@ class Token extends CoreModel {
     public function create(TokenEntity $e)
     {
         try {
+            $tokenData = $e->toArray();
+
             $newToken = \ORM::forTable(self::TABLE)->create();
-            $newToken->id = $e->getId();
-            $newToken->token = $e->getToken();
-            $newToken->ip = $e->getIp();
-            $newToken->browser = $e->getBrowser();
-            $newToken->expire = $e->getExpire();
+            $newToken->set($tokenData);
             $newToken->save();
             $newTokenId = $newToken->id;
 

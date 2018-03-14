@@ -4,7 +4,6 @@ namespace App\MVC\Controllers\Auth;
 
 use \App\Core\CoreController;
 use App\MVC\Entity\UserEntity;
-use App\MVC\Models\User;
 
 /**
  * Class RegisterController
@@ -20,7 +19,7 @@ class RegisterController extends CoreController
      */
     public function index($request, $response)
     {
-        $u = new User();
+        $u = $this->getModel('User');
         $form = $this->getForm('App\Forms\RegisterForm');
 
         if ($request->isPost()) {

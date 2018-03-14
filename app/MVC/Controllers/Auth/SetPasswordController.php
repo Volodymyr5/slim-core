@@ -5,7 +5,6 @@ namespace App\MVC\Controllers\Auth;
 use \App\Core\CoreController;
 use App\Forms\Validators\IsPasswordTokenValid;
 use App\MVC\Entity\UserEntity;
-use App\MVC\Models\User;
 
 /**
  * Class SetPasswordController
@@ -20,7 +19,7 @@ class SetPasswordController extends CoreController
      */
     public function index($request, $response)
     {
-        $u = new User();
+        $u = $this->getModel('User');
 
         $token = $request->getParam('t', '');
 

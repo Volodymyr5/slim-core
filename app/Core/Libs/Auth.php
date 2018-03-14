@@ -48,9 +48,13 @@ class Auth
         }
     }
 
-    public function isLogged()
+    public function identity()
     {
+        $t = new Token($this->container);
+        $user = $t->getByIpBrowser($this->getIpForToken(), $this->getBrowserForToken());
 
+
+        var_dump('users', $users);
     }
 
     /**
@@ -244,9 +248,7 @@ class Auth
      */
     private function updateTokenInDB($refreshToken)
     {
-        $t = new Token();
-
-        var_dump('update');
+        $t = new Token($this->container);
 
         $newToken = new TokenEntity();
         $newToken->exchangeArray([
@@ -254,6 +256,8 @@ class Auth
             'ip' => $this->getIpForToken(),
             'browser' => $this->getBrowserForToken(),
             'expire' => time() + $this->refreshTokenExpire,
+            'visitor' => md5($this->getIpForToken() . $this->getBrowserForToken()),
+            'end' => time(),
         ]);
 
         try {
@@ -261,7 +265,7 @@ class Auth
 
             return true;
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
+            \App\Core\Libs\Logger::log($e->getMessage());
 
             return false;
         }
@@ -319,18 +323,4 @@ class Auth
     {
         return hash('sha256', $string);
     }
-
-
-//    public function getUser($strict = false)
-//    public function reworkTokens()
-//    private function createAllTokens($userId)
-//    private function getTokensFromCookie()
-//    private function checkTokenParams($token, $checkExpire = true)
-//    private function checkRefreshToken($refreshTokenData)
-//    public function readToken($token)
-//    private function logoutRedirect()
-//    private function updateUserRefreshTokenList($userId, $refreshToken)
-//    private function deleteCurrentRefreshToken($tokenData)
-//    public function getFirstRefreshTokenFromDb($immortalToken, $strict = false)
-//    private function getRefreshTokensFromDb($userId, $browser, $ip)
 }
