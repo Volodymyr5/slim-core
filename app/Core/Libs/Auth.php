@@ -19,9 +19,10 @@ class Auth
 
     protected $privateKey;
 
-    protected $accessTokenExpire;
-
-    protected $refreshTokenExpire;
+    protected $updateExpiration;
+    protected $sessionExpiration;
+    protected $authExpiration;
+    protected $visitorExpiration;
 
     /**
      * Auth constructor.
@@ -36,28 +37,52 @@ class Auth
 
         $this->publicKey = !empty($config['jwt']['public']) ? $config['jwt']['public'] : null;
         $this->privateKey = !empty($config['jwt']['private']) ? $config['jwt']['private'] : null;
-        $this->accessTokenExpire = !empty($config['jwt']['access_token']) ? $config['jwt']['access_token'] : null;
-        $this->refreshTokenExpire = !empty($config['jwt']['refresh_token']) ? $config['jwt']['refresh_token'] : null;
+
+        $this->updateExpiration = !empty($config['jwt']['update_expiration']) ? $config['jwt']['update_expiration'] : null;
+        $this->sessionExpiration = !empty($config['jwt']['session_expiration']) ? $config['jwt']['session_expiration'] : null;
+        $this->authExpiration = !empty($config['jwt']['auth_expiration']) ? $config['jwt']['auth_expiration'] : null;
+        $this->visitorExpiration = !empty($config['jwt']['visitor_expiration']) ? $config['jwt']['visitor_expiration'] : null;
 
         if (empty($this->publicKey) || empty($this->privateKey)) {
             throw new \Exception('Error. Public or private token not set in local.php!');
         }
 
-        if (empty($this->accessTokenExpire) || empty($this->refreshTokenExpire)) {
-            throw new \Exception('Error. Access token Expire or Refresh token Expire token not set in local.php!');
+        if (
+            empty($this->updateExpiration) ||
+            empty($this->sessionExpiration) ||
+            empty($this->authExpiration) ||
+            empty($this->visitorExpiration)
+        ) {
+            throw new \Exception('Error. JWT Token Expiration not set in local.php!');
         }
     }
 
     public function identity()
     {
-        $tokens = $this->getTokensFromCookie();
+        $t = new Token();
+
+        $tokens = $t->getAll([
+            //'token' => 'qweqwe',
+            //'ip' => '234',
+            //'browser' => 'q1w2',
+            'expire' => time(),
+        ]);
+        $tokens = $tokens;
+
+        var_dump(date('Y-m-d H:i:s', time()));
+
+        foreach ($tokens as $token) {
+            var_dump($token->as_array());
+        }
+
+        /*$tokens = $this->getTokensFromCookie();
         $at = !empty($tokens['access_token']) ? $this->readToken($tokens['access_token']) : null;
         $rt = !empty($tokens['refresh_token']) ? $this->readToken($tokens['refresh_token']) : null;
 
         $at = !empty($at['te']) ? date('H:i:s d.m.Y', $at['te']) : null;
         $rt = !empty($rt['te']) ? date('H:i:s d.m.Y', $rt['te']) : null;
 
-        var_dump(date('H:i:s d.m.Y', time()), $at, $rt);
+        var_dump(date('H:i:s d.m.Y', time()), $at, $rt);*/
     }
 
     public function update()
@@ -65,7 +90,7 @@ class Auth
         $token = $this->getTokenFromCookie();
         // Check if has token
         if ($token) {
-            $token = $this->readToken($token);
+            $tokenArray = $this->readToken($token);
             // Check token
             if (!$this->checkTokenInDB($token)) {
                 $this->fraudAttempt($token);
@@ -74,18 +99,118 @@ class Auth
             }
 
             // Check Update Expiration
-            if ($token['UE'] <= time()) {
+            if ($tokenArray['UE'] <= time()) {
                 // Check Session Expiration
-                $newSession = $token['SE'] > time();
+                $newSession = $tokenArray['SE'] > time();
                 // Check Auth Expiration
-                $clearUser = $token['AE'] <= time();
+                $clearUser = $tokenArray['AE'] <= time();
                 $rawToken = $this->updateTokenInDB($token, $clearUser, $newSession);
-                $this->setCookie($rawToken);
+                $this->setTokenInCookie($rawToken);
             }
         } else {
-            $rawToken = $this->updateTokenInDB($token, true, true);
-            $this->setCookie($rawToken);
+            $rawToken = $this->updateTokenInDB(null, true, true);
+            $this->setTokenInCookie($rawToken);
         }
+    }
+
+    private function updateTokenInDB($token, $clearUser = false, $createNewToken = true)
+    {
+        $t = new Token();
+
+        $te = new TokenEntity();
+        $te->exchangeArray([
+            'user_id' => '',
+            'visitor' => md5($this->getIpForToken() . $this->getBrowserForToken()),
+            'token' => '',
+            'ip' => $this->getIpForToken(),
+            'browser' => $this->getBrowserForToken(),
+            'end' => time(),
+            'expire' => time() + $this->visitorExpiration,
+        ]);
+
+        if (empty($token)) {
+            $newToken = $this->createNewToken();
+            $te->setUserId('');
+            $te->setToken($newToken);
+        } else {
+            if ($clearUser) {
+                $te->setUserId('');
+            } else {
+                $t->getAll([
+
+                ]);
+            }
+        }
+
+
+
+        $token = !$createNewToken ? $token : null;
+        $token = $this->createNewToken($token);
+
+
+
+        $newToken = new TokenEntity();
+        $newToken->exchangeArray([
+            'token' => $token,
+            'ip' => $this->getIpForToken(),
+            'browser' => $this->getBrowserForToken(),
+            'expire' => time() + $this->visitorExpiration,
+            'visitor' => md5($this->getIpForToken() . $this->getBrowserForToken()),
+            'end' => time(),
+        ]);
+
+
+
+        /*try {
+            if ($updateToken) {
+                $t->createOnDublicateUpdate($newToken);
+            } else {
+                $t->create($newToken);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            \App\Core\Libs\Logger::log($e->getMessage());
+
+            return false;
+        }*/
+    }
+
+    /**
+     * @param null $token
+     * @return bool|string
+     */
+    private function createNewToken($token = null)
+    {
+        if ($token) {
+            $token = !is_array($token) ? $this->readToken($token) : $token;
+            $userIp = !empty($token['tp']) ? $token['tp'] : false;
+            $userAgent = !empty($token['tb']) ? $token['tb'] : false;
+        } else {
+            $userIp = $this->getIpForToken();
+            $userAgent = $this->getBrowserForToken();
+
+            $userIp = $this->hashString($userIp);
+            $userAgent = $this->hashString($userAgent);
+        }
+
+        if (
+            empty($userIp) ||
+            empty($userAgent)
+        ) {
+            return false;
+        }
+
+        $tokenArray = [
+            'tp' => $userIp,
+            'tb' => $userAgent,
+            'ue' => intval(date('U') + $this->updateExpiration),
+            'se' => intval(date('U') + $this->sessionExpiration),
+            'ae' => intval(date('U') + $this->authExpiration),
+            've' => intval(date('U') + $this->visitorExpiration),
+        ];
+
+        return $this->createToken($tokenArray);
     }
 
     /**
@@ -109,11 +234,22 @@ class Auth
     {
         try {
             $tokenArray = JWT::decode($token, $this->publicKey, array('RS256'));
-            $tokenArray = (array) $tokenArray;
+            $tokenArray = (array)$tokenArray;
             return $tokenArray;
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    private function setTokenInCookie($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+
+        setcookie('SESSID', $token, time() + $this->accessTokenExpire, '/');
+
+        return true;
     }
 
     /**
@@ -132,23 +268,11 @@ class Auth
     }
 
     /**
-     * @param $token
-     */
-    private function fraudAttempt($token)
-    {
-        //$token = $this->readToken($token);
-        $this->clearCookie();
-        // clearTokenFromDB
-        //clearHistory
-        unset($_SESSION['SESSID']);
-    }
-
-    /**
      *
      */
     private function clearCookie()
     {
-        setcookie('SESSID', '', time()-3600, '/');
+        setcookie('SESSID', '', time() - 3600, '/');
     }
 
     private function getBrowserForToken()
@@ -172,6 +296,18 @@ class Auth
         }
 
         return $ip;
+    }
+
+    /**
+     * @param $token
+     */
+    private function fraudAttempt($token)
+    {
+        //$token = $this->readToken($token);
+        $this->clearCookie();
+        // clearTokenFromDB
+        //clearHistory
+        unset($_SESSION['SESSID']);
     }
 
     private function hashString($string)

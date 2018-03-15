@@ -15,8 +15,10 @@ return [
         ],
     ],
     'jwt' => [
-        'access_token' => 60*10,
-        'refresh_token' => 60*60*24,
+        'update_expiration' => 10,
+        'session_expiration' => 40,
+        'auth_expiration' => 80,
+        'visitor_expiration' => 300,
         'public' =>
 <<<EOT
 -----BEGIN PUBLIC KEY-----
