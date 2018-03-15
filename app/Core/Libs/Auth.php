@@ -58,20 +58,129 @@ class Auth
         $rt = !empty($rt['te']) ? date('H:i:s d.m.Y', $rt['te']) : null;
 
         var_dump(date('H:i:s d.m.Y', time()), $at, $rt);
+    }
 
+    public function update()
+    {
+        $token = $this->getTokenFromCookie();
+        // Check if has token
+        if ($token) {
+            $token = $this->readToken($token);
+            // Check token
+            if (!$this->checkTokenInDB($token)) {
+                $this->fraudAttempt($token);
+                $this->update();
+                return false;
+            }
 
-
-//        $t = new Token();
-//        $user = $t->getByIpBrowser($this->getIpForToken(), $this->getBrowserForToken());
-
-
-        //var_dump('users', $users);
+            // Check Update Expiration
+            if ($token['UE'] <= time()) {
+                // Check Session Expiration
+                $newSession = $token['SE'] > time();
+                // Check Auth Expiration
+                $clearUser = $token['AE'] <= time();
+                $rawToken = $this->updateTokenInDB($token, $clearUser, $newSession);
+                $this->setCookie($rawToken);
+            }
+        } else {
+            $rawToken = $this->updateTokenInDB($token, true, true);
+            $this->setCookie($rawToken);
+        }
     }
 
     /**
-     * @return bool
+     * @param $tokenArray
+     * @return bool|string
      */
-    public function update()
+    private function createToken($tokenArray)
+    {
+        try {
+            return JWT::encode($tokenArray, $this->privateKey, 'RS256');
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $token
+     * @return array|null|object
+     */
+    public function readToken($token)
+    {
+        try {
+            $tokenArray = JWT::decode($token, $this->publicKey, array('RS256'));
+            $tokenArray = (array) $tokenArray;
+            return $tokenArray;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getTokenFromCookie()
+    {
+        try {
+            $request = $this->container->get('request');
+            $cookies = $request->getCookieParams();
+        } catch (ContainerExceptionInterface $e) {
+            $result = [];
+        }
+
+        return !empty($cookies['SESSID']) ? $cookies['SESSID'] : null;
+    }
+
+    /**
+     * @param $token
+     */
+    private function fraudAttempt($token)
+    {
+        //$token = $this->readToken($token);
+        $this->clearCookie();
+        // clearTokenFromDB
+        //clearHistory
+        unset($_SESSION['SESSID']);
+    }
+
+    /**
+     *
+     */
+    private function clearCookie()
+    {
+        setcookie('SESSID', '', time()-3600, '/');
+    }
+
+    private function getBrowserForToken()
+    {
+        if ($this->container->request->hasHeader('HTTP_USER_AGENT')) {
+            $agent = $this->container->request->getHeader('HTTP_USER_AGENT');
+        }
+
+        if (!empty($agent[0])) {
+            return $agent[0];
+        }
+
+        return false;
+    }
+
+    private function getIpForToken()
+    {
+        $ip = $this->container->request->getServerParam('REMOTE_ADDR');
+        if (!$ip) {
+            return false;
+        }
+
+        return $ip;
+    }
+
+    private function hashString($string)
+    {
+        return hash('sha256', $string);
+    }
+
+    /*
+    public function update_OLD()
     {
         $tokens = $this->getTokensFromCookie();
         if ($tokens['refresh_token'] && !$this->checkTokenExpire($tokens['refresh_token'])) {
@@ -109,10 +218,6 @@ class Auth
         return true;
     }
 
-    /**
-     * @param $tokens
-     * @return bool
-     */
     private function setCookies($tokens)
     {
         if (empty($tokens['access_token']) || empty($tokens['refresh_token'])) {
@@ -125,9 +230,6 @@ class Auth
         return true;
     }
 
-    /**
-     * @return array
-     */
     private function getTokensFromCookie()
     {
         try {
@@ -143,19 +245,12 @@ class Auth
         return $result;
     }
 
-    /**
-     *
-     */
-    private function clearCookies()
+    private function clearCookies_OLD()
     {
         setcookie('at', '', time()-3600, '/');
         setcookie('rt', '', time()-3600, '/');
     }
 
-    /**
-     * @param null $refreshToken
-     * @return bool
-     */
     private function createTokens($refreshToken = null)
     {
         if ($refreshToken) {
@@ -190,10 +285,6 @@ class Auth
         return $result;
     }
 
-    /**
-     * @param $token
-     * @return bool
-     */
     private function checkToken($token)
     {
         $userIp = $this->getIpForToken();
@@ -214,10 +305,6 @@ class Auth
         );
     }
 
-    /**
-     * @param $token
-     * @return bool
-     */
     private function checkTokenExpire($token)
     {
         $token = !is_array($token) ? $this->readToken($token) : $token;
@@ -225,39 +312,7 @@ class Auth
         return $token && isset($token['te']) && is_numeric($token['te']) && $token['te'] < date('U');
     }
 
-    /**
-     * @param $tokenArray
-     * @return bool|string
-     */
-    private function createToken($tokenArray)
-    {
-        try {
-            return JWT::encode($tokenArray, $this->privateKey, 'RS256');
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param $token
-     * @return array|null|object
-     */
-    public function readToken($token)
-    {
-        try {
-            $tokenArray = JWT::decode($token, $this->publicKey, array('RS256'));
-            $tokenArray = (array) $tokenArray;
-            return $tokenArray;
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param $refreshToken
-     * @return bool
-     */
-    private function updateTokenInDB($refreshToken, $updateToken = false)
+    private function updateTokenInDB($refreshToken, $clearUser = false, $createNewToken = true)
     {
         $t = new Token();
 
@@ -286,9 +341,6 @@ class Auth
         }
     }
 
-    /**
-     * @return bool
-     */
     private function getBrowserForToken()
     {
         if ($this->container->request->hasHeader('HTTP_USER_AGENT')) {
@@ -302,9 +354,6 @@ class Auth
         return false;
     }
 
-    /**
-     * @return bool|string
-     */
     private function getIpForToken()
     {
         $ip = $this->container->request->getServerParam('REMOTE_ADDR');
@@ -315,10 +364,7 @@ class Auth
         return $ip;
     }
 
-    /**
-     * @param $token
-     */
-    private function fraudAttempt($token)
+    private function fraudAttempt_OLD($token)
     {
         //$token = $this->readToken($token);
         $this->clearCookies();
@@ -326,16 +372,11 @@ class Auth
         //clearHistory
         unset($_SESSION['rt']);
         unset($_SESSION['at']);
-
-        $this->update();
     }
 
-    /**
-     * @param $string
-     * @return string
-     */
     private function hashString($string)
     {
         return hash('sha256', $string);
     }
+    */
 }
