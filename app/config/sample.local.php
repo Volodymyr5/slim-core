@@ -18,7 +18,7 @@ return [
         'update_expiration' => 10,
         'session_expiration' => 40,
         'auth_expiration' => 80,
-        'visitor_expiration' => 300,
+        'visitor_expiration' => 60*60*24*365,
         'public' =>
 <<<EOT
 -----BEGIN PUBLIC KEY-----

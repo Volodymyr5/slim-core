@@ -42,8 +42,6 @@ class Token extends CoreModel {
         }
 
         if ($params['expire']) {
-            $params['expire'] = is_numeric($params['expire']) ? date('Y-m-d H:i:s', ($params['expire'] - 960)) : $params['expire'];
-
             $query->where_gt('expire', $params['expire']);
         }
 

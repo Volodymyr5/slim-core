@@ -61,28 +61,7 @@ class Auth
     {
         $t = new Token();
 
-        $tokens = $t->getAll([
-            //'token' => 'qweqwe',
-            //'ip' => '234',
-            //'browser' => 'q1w2',
-            'expire' => time(),
-        ]);
-        $tokens = $tokens;
-
         var_dump(date('Y-m-d H:i:s', time()));
-
-        foreach ($tokens as $token) {
-            var_dump($token->as_array());
-        }
-
-        /*$tokens = $this->getTokensFromCookie();
-        $at = !empty($tokens['access_token']) ? $this->readToken($tokens['access_token']) : null;
-        $rt = !empty($tokens['refresh_token']) ? $this->readToken($tokens['refresh_token']) : null;
-
-        $at = !empty($at['te']) ? date('H:i:s d.m.Y', $at['te']) : null;
-        $rt = !empty($rt['te']) ? date('H:i:s d.m.Y', $rt['te']) : null;
-
-        var_dump(date('H:i:s d.m.Y', time()), $at, $rt);*/
     }
 
     public function update()
@@ -94,16 +73,25 @@ class Auth
             // Check token
             if (!$this->checkTokenInDB($token)) {
                 $this->fraudAttempt($token);
-                $this->update();
+                header("Refresh:0");
                 return false;
             }
+
+            $showInfo = [
+                'UE' => isset($tokenArray['UE']) ? date('H:i:s d.m.Y', $tokenArray['UE']) : '',
+                'SE' => isset($tokenArray['SE']) ? date('H:i:s d.m.Y', $tokenArray['SE']) : '',
+                'AE' => isset($tokenArray['AE']) ? date('H:i:s d.m.Y', $tokenArray['AE']) : '',
+                'VE' => isset($tokenArray['VE']) ? date('H:i:s d.m.Y', $tokenArray['VE']) : '',
+            ];
+            var_dump($showInfo);
 
             // Check Update Expiration
             if ($tokenArray['UE'] <= time()) {
                 // Check Session Expiration
-                $newSession = $tokenArray['SE'] > time();
+                $newSession = $tokenArray['SE'] <= time();
                 // Check Auth Expiration
                 $clearUser = $tokenArray['AE'] <= time();
+
                 $rawToken = $this->updateTokenInDB($token, $clearUser, $newSession);
                 $this->setTokenInCookie($rawToken);
             }
@@ -113,67 +101,66 @@ class Auth
         }
     }
 
-    private function updateTokenInDB($token, $clearUser = false, $createNewToken = true)
+    private function checkTokenInDB($token)
     {
         $t = new Token();
+
+        $dbTokensCount = count($t->getAll([
+            'token' => $token,
+        ]));
+
+        return $dbTokensCount == 1;
+    }
+
+    private function updateTokenInDB($oldToken, $clearUser = false, $newSession = false)
+    {
+        $t = new Token();
+
+        $newToken = $this->createNewToken($oldToken);
 
         $te = new TokenEntity();
         $te->exchangeArray([
             'user_id' => '',
             'visitor' => md5($this->getIpForToken() . $this->getBrowserForToken()),
-            'token' => '',
+            'token' => $newToken,
             'ip' => $this->getIpForToken(),
             'browser' => $this->getBrowserForToken(),
             'end' => time(),
             'expire' => time() + $this->visitorExpiration,
         ]);
 
-        if (empty($token)) {
-            $newToken = $this->createNewToken();
-            $te->setUserId('');
-            $te->setToken($newToken);
-        } else {
-            if ($clearUser) {
-                $te->setUserId('');
-            } else {
-                $t->getAll([
+        $prevSession = $t->getAll([
+            'token' => $oldToken,
+            'ip' => $this->getIpForToken(),
+            'browser' => $this->getBrowserForToken(),
+            'expire' => time(),
+            'limit' => 1,
+            'sort' => 'id',
+            'order' => 'desc',
+        ]);
 
-                ]);
-            }
+        var_dump('$prevSession', $prevSession);
+
+        $prevSession = !empty($prevSession[0]) ? $prevSession[0] : null;
+        $prevSession = !empty($prevSession->token) ? $prevSession : null;
+
+        if (!$clearUser && $prevSession) {
+            $te->setUserId($prevSession->user_id);
         }
 
+        if ($prevSession) {
+            var_dump(333, $prevSession->id);
+        } else {
+            var_dump($prevSession);
+        }
 
+        if ($prevSession && !$newSession) {
+            $t->modify($te);
+        } else {
+            $t->create($te);
+        }
 
-        $token = !$createNewToken ? $token : null;
-        $token = $this->createNewToken($token);
-
-
-
-        $newToken = new TokenEntity();
-        $newToken->exchangeArray([
-            'token' => $token,
-            'ip' => $this->getIpForToken(),
-            'browser' => $this->getBrowserForToken(),
-            'expire' => time() + $this->visitorExpiration,
-            'visitor' => md5($this->getIpForToken() . $this->getBrowserForToken()),
-            'end' => time(),
-        ]);
-
-
-
-        /*try {
-            if ($updateToken) {
-                $t->createOnDublicateUpdate($newToken);
-            } else {
-                $t->create($newToken);
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            \App\Core\Libs\Logger::log($e->getMessage());
-
-            return false;
-        }*/
+        return $te->getToken();
     }
 
     /**
@@ -184,8 +171,8 @@ class Auth
     {
         if ($token) {
             $token = !is_array($token) ? $this->readToken($token) : $token;
-            $userIp = !empty($token['tp']) ? $token['tp'] : false;
-            $userAgent = !empty($token['tb']) ? $token['tb'] : false;
+            $userIp = !empty($token['TP']) ? $token['TP'] : false;
+            $userAgent = !empty($token['TB']) ? $token['TB'] : false;
         } else {
             $userIp = $this->getIpForToken();
             $userAgent = $this->getBrowserForToken();
@@ -202,12 +189,12 @@ class Auth
         }
 
         $tokenArray = [
-            'tp' => $userIp,
-            'tb' => $userAgent,
-            'ue' => intval(date('U') + $this->updateExpiration),
-            'se' => intval(date('U') + $this->sessionExpiration),
-            'ae' => intval(date('U') + $this->authExpiration),
-            've' => intval(date('U') + $this->visitorExpiration),
+            'TP' => $userIp,
+            'TB' => $userAgent,
+            'UE' => intval(date('U') + $this->updateExpiration),
+            'SE' => intval(date('U') + $this->sessionExpiration),
+            'AE' => intval(date('U') + $this->authExpiration),
+            'VE' => intval(date('U') + $this->visitorExpiration),
         ];
 
         return $this->createToken($tokenArray);
@@ -247,7 +234,7 @@ class Auth
             return false;
         }
 
-        setcookie('SESSID', $token, time() + $this->accessTokenExpire, '/');
+        setcookie('SESSID', $token, time() + $this->visitorExpiration, '/');
 
         return true;
     }
