@@ -59,8 +59,6 @@ class Token extends CoreModel {
 
         $result = $query->findMany();
 
-        print_r($query->get_last_query());
-
         return $result;
     }
 
