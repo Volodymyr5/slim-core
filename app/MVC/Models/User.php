@@ -20,11 +20,16 @@ class User extends CoreModel {
      */
     public function getAll($params = [])
     {
+        $params['ids'] = isset($params['ids']) && is_array($params['ids']) ? $params['ids'] : array();
         $params['email'] = isset($params['email']) ? $params['email'] : null;
         $params['password'] = isset($params['password']) ? $params['password'] : null;
         $params['password_token'] = isset($params['password_token']) ? $params['password_token'] : null;
 
         $query = $this->getQuery();
+
+        if (!empty($params['ids'])) {
+            $query->where_id_in($params['ids']);
+        }
 
         if ($params['email']) {
             $query->where('email', $params['email']);

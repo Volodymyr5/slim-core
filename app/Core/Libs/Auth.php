@@ -3,6 +3,7 @@
 namespace App\Core\Libs;
 use App\MVC\Entity\TokenEntity;
 use App\MVC\Models\Token;
+use App\MVC\Models\User;
 use Firebase\JWT\JWT;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -62,11 +63,67 @@ class Auth
 
     public function identity()
     {
-        //$t = new Token();
+        $u = new User();
+
+        $token = $this->getTokenFromCookie();
+        $lastSession = $this->getNeedSession($token);
+        $users = [];
+        if (!empty($lastSession['user_id'])) {
+            $users = $u->getAll(['ids' => [$lastSession['user_id']]]);
+        }
+
+        var_dump($users);
+    }
+
+    /**
+     * @param $userId
+     * @return bool
+     * @throws \Exception
+     */
+    public function login($userId)
+    {
+        $t = new Token();
+
+        $token = $this->getTokenFromCookie();
+        $lastSession = $this->getNeedSession($token);
+
+        \App\Core\Libs\Logger::log(print_r($lastSession, true));
+
+        if ($lastSession) {
+            $te = new TokenEntity();
+            $te->setId($lastSession['id']);
+            $te->setUserId($userId);
+
+            $t->modify($te);
+        }
+
+        return true;
     }
 
     /**
      * @return bool
+     * @throws \Exception
+     */
+    public function logout()
+    {
+        $t = new Token();
+
+        $token = $this->getTokenFromCookie();
+        $lastSession = $this->getNeedSession($token);
+        if ($lastSession) {
+            $te = new TokenEntity();
+            $te->setId($lastSession['id']);
+            $te->setUserId('');
+
+            $t->modify($te);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
      */
     public function update()
     {
@@ -140,7 +197,33 @@ class Auth
             'expire' => time() + $this->visitorExpiration,
         ]);
 
-        $prevSession = $t->getAll([
+        $prevSession = $this->getNeedSession($oldToken);
+
+        if (!$clearUser && $prevSession) {
+            $te->setUserId($prevSession['user_id']);
+        }
+
+        if ($prevSession && !$newSession) {
+            $te->setId($prevSession['id']);
+            $t->modify($te);
+        } else {
+            $t->create($te);
+        }
+
+        return $te->getToken();
+    }
+
+    /**
+     * @param $oldToken
+     * @return object|null
+     */
+    private function getNeedSession($oldToken)
+    {
+        $t = new Token();
+
+        $oldToken = $oldToken ? $oldToken : '';
+
+        $session = $t->getAll([
             'token' => $oldToken,
             'ip' => $this->getIpForToken(),
             'browser' => $this->getBrowserForToken(),
@@ -149,21 +232,10 @@ class Auth
             'order' => 'desc',
         ]);
 
-        $prevSession = !empty($prevSession[0]) ? $prevSession[0] : null;
-        $prevSession = !empty($prevSession->token) ? $prevSession : null;
+        $session = !empty($session[0]) ? $session[0] : null;
+        $session = !empty($session->token) ? $session->asArray() : null;
 
-        if (!$clearUser && $prevSession) {
-            $te->setUserId($prevSession->user_id);
-        }
-
-        if ($prevSession && !$newSession) {
-            $te->setId($prevSession->id);
-            $t->modify($te);
-        } else {
-            $t->create($te);
-        }
-
-        return $te->getToken();
+        return $session;
     }
 
     /**

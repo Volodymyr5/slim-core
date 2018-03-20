@@ -17,6 +17,8 @@ class LoginController extends CoreController
      */
     public function index($request, $response)
     {
+        $u = $this->getModel('User');
+
         $form = $this->getForm('App\Forms\LoginForm');
 
         if ($request->isPost()) {
@@ -24,12 +26,19 @@ class LoginController extends CoreController
             $form->setData($data);
             $isValid = $form->isValid();
             if ($isValid) {
-                $this->container->flash->addMessage(
-                    'alert-success',
-                    '<h3>You successfully logged in!</h3>'
-                );
+                $formData = $form->getData();
+                $currUser = $u->getByEmail($formData['email']);
+                $currUser = $currUser->asArray();
+                if (!empty($currUser['id'])) {
+                    $this->container->user->login($currUser['id']);
 
-                return $response->withRedirect($this->router->pathFor('home'));
+                    $this->container->flash->addMessage(
+                        'alert-success',
+                        '<h3>You successfully logged in!</h3>'
+                    );
+
+                    return $response->withRedirect($this->router->pathFor('home'));
+                }
             }
         }
 
@@ -45,6 +54,8 @@ class LoginController extends CoreController
      */
     public function logout ($request, $response)
     {
+        $this->container->user->logout();
+
         $this->container->flash->addMessage(
             'alert-success',
             '<h3>You successfully logged out!</h3>'

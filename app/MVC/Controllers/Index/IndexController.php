@@ -17,8 +17,6 @@ class IndexController extends CoreController
      */
     public function index($request, $response)
     {
-        $this->container->user->identity();
-
         $at = !empty($_COOKIE['at']) ? $this->container->user->readToken($_COOKIE['at']) : null;
         $rt = !empty($_COOKIE['rt']) ? $this->container->user->readToken($_COOKIE['rt']) : null;
 
