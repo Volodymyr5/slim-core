@@ -28,6 +28,8 @@ class Auth
 
     protected $visitorExpiration;
 
+    protected $identity;
+
     /**
      * Auth constructor.
      * @param ContainerInterface $container
@@ -59,20 +61,28 @@ class Auth
         ) {
             throw new \Exception('Error. JWT Token Expiration not set in local.php!');
         }
+
+        $this->setIdentity(null);
     }
 
-    public function identity()
+    /**
+     * @return array|null
+     */
+    public function getIdentity()
     {
-        $u = new User();
+        return $this->identity;
+    }
 
-        $token = $this->getTokenFromCookie();
-        $lastSession = $this->getNeedSession($token);
-        $users = [];
-        if (!empty($lastSession['user_id'])) {
-            $users = $u->getAll(['ids' => [$lastSession['user_id']]]);
+    /**
+     * @param $identity
+     */
+    private function setIdentity($identity)
+    {
+        if (!empty($identity['id'])) {
+            $this->identity = $identity;
+        } else {
+            $this->identity = null;
         }
-
-        var_dump($users);
     }
 
     /**
@@ -87,8 +97,6 @@ class Auth
         $token = $this->getTokenFromCookie();
         $lastSession = $this->getNeedSession($token);
 
-        \App\Core\Libs\Logger::log(print_r($lastSession, true));
-
         if ($lastSession) {
             $te = new TokenEntity();
             $te->setId($lastSession['id']);
@@ -96,6 +104,8 @@ class Auth
 
             $t->modify($te);
         }
+
+        \App\Core\Libs\Logger::log(print_r($lastSession, true));
 
         return true;
     }
