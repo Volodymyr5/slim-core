@@ -22,6 +22,8 @@ class CoreController
 
         // JWT auth processing
         $container->user->update();
+
+        var_dump($container->user->getIdentity());
     }
 
     /**

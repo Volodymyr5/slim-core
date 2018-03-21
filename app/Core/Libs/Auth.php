@@ -14,21 +14,22 @@ use Psr\Container\ContainerInterface;
  */
 class Auth
 {
-    protected $container;
+    private $container;
 
-    protected $publicKey;
+    private $publicKey;
 
-    protected $privateKey;
+    private $privateKey;
 
-    protected $updateExpiration;
+    private $updateExpiration;
 
-    protected $sessionExpiration;
+    private $sessionExpiration;
 
-    protected $authExpiration;
+    private $authExpiration;
 
-    protected $visitorExpiration;
+    private $visitorExpiration;
 
     const IDENTITY = 'identity';
+
     const TOKEN = 'token';
 
     /**

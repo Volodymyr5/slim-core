@@ -19,3 +19,12 @@ $app->add(function ($request, $response, $next) use ($container) {
     // Continue middleware chain
     return $next($request, $response);
 });
+
+// Run ACL
+$app->add(function ($request, $response, $next) use ($container) {
+    $acl = new \App\Core\Libs\Acl($container, $request);
+    $acl->isAllowed();
+
+    // Continue middleware chain
+    return $next($request, $response);
+});
