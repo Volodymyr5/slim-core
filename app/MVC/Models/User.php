@@ -58,6 +58,19 @@ class User extends CoreModel {
     }
 
     /**
+     * @param $id
+     * @return bool|\ORM
+     */
+    public function getById($id)
+    {
+        $query = $this->getQuery();
+
+        $user = $query->where('id', $id)->findOne();
+
+        return $user ? $user->asArray() : null;
+    }
+
+    /**
      * @param UserEntity $e
      * @return array|mixed|null
      * @throws \Exception

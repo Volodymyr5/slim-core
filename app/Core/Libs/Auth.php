@@ -28,7 +28,8 @@ class Auth
 
     protected $visitorExpiration;
 
-    protected $identity;
+    const IDENTITY = 'identity';
+    const TOKEN = 'token';
 
     /**
      * Auth constructor.
@@ -61,8 +62,6 @@ class Auth
         ) {
             throw new \Exception('Error. JWT Token Expiration not set in local.php!');
         }
-
-        $this->setIdentity(null);
     }
 
     /**
@@ -70,19 +69,7 @@ class Auth
      */
     public function getIdentity()
     {
-        return $this->identity;
-    }
-
-    /**
-     * @param $identity
-     */
-    private function setIdentity($identity)
-    {
-        if (!empty($identity['id'])) {
-            $this->identity = $identity;
-        } else {
-            $this->identity = null;
-        }
+        return !empty($_SESSION[self::IDENTITY]['id']) ? $_SESSION[self::IDENTITY] : null;
     }
 
     /**
@@ -93,8 +80,9 @@ class Auth
     public function login($userId)
     {
         $t = new Token();
+        $u = new User();
 
-        $token = $this->getTokenFromCookie();
+        $token = $this->getTokenFromSession();
         $lastSession = $this->getNeedSession($token);
 
         if ($lastSession) {
@@ -103,9 +91,13 @@ class Auth
             $te->setUserId($userId);
 
             $t->modify($te);
-        }
 
-        \App\Core\Libs\Logger::log(print_r($lastSession, true));
+            $user = $u->getById($userId);
+            if ($user) {
+                $this->setUserIdentityInSession($user);
+            }
+
+        }
 
         return true;
     }
@@ -127,6 +119,7 @@ class Auth
 
             $t->modify($te);
         }
+        $this->setUserIdentityInSession(null);
 
         return true;
     }
@@ -157,12 +150,10 @@ class Auth
 
                 // Update token
                 $rawToken = $this->updateTokenInDB($token, $clearUser, $newSession);
-                $this->setTokenInCookie($rawToken);
             }
         } else {
             // Create new token
             $rawToken = $this->updateTokenInDB(null, true, true);
-            $this->setTokenInCookie($rawToken);
         }
 
         return true;
@@ -193,6 +184,7 @@ class Auth
     private function updateTokenInDB($oldToken, $clearUser = false, $newSession = false)
     {
         $t = new Token();
+        $u = new User();
 
         $newToken = $this->createNewToken($oldToken);
 
@@ -209,7 +201,7 @@ class Auth
 
         $prevSession = $this->getNeedSession($oldToken);
 
-        if (!$clearUser && $prevSession) {
+        if (!$clearUser && !empty($prevSession['user_id'])) {
             $te->setUserId($prevSession['user_id']);
         }
 
@@ -219,6 +211,13 @@ class Auth
         } else {
             $t->create($te);
         }
+
+        if (empty($te->getUserId())) {
+            $this->setUserIdentityInSession(null);
+        }
+
+        $this->setTokenInCookie($te->getToken());
+        $this->setTokenInSession($te->getToken());
 
         return $te->getToken();
     }
@@ -349,6 +348,38 @@ class Auth
     private function clearCookie()
     {
         setcookie('SESSID', '', time() - 3600, '/');
+    }
+
+    /**
+     * @param $token
+     */
+    private function setTokenInSession($token)
+    {
+        if (!empty($token)) {
+            $_SESSION[self::TOKEN] = $token;
+        } else {
+            unset($_SESSION[self::TOKEN]);
+        }
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getTokenFromSession()
+    {
+        return !empty($_SESSION[self::TOKEN]) ? $_SESSION[self::TOKEN] : null;
+    }
+
+    /**
+     * @param $identity
+     */
+    private function setUserIdentityInSession($identity)
+    {
+        if (!empty($identity['id'])) {
+            $_SESSION[self::IDENTITY] = $identity;
+        } else {
+            unset($_SESSION[self::IDENTITY]);
+        }
     }
 
     /**

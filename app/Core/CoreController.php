@@ -20,7 +20,8 @@ class CoreController
     {
         $this->container = $container;
 
-        $this->container->user->getIdentity();
+        // JWT auth processing
+        $container->user->update();
     }
 
     /**
