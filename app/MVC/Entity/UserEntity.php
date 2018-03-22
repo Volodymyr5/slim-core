@@ -11,6 +11,7 @@ use App\Core\EntityInterface;
 class UserEntity implements EntityInterface {
 
     protected $id;
+    protected $role;
     protected $email;
     protected $password;
     protected $password_token;
@@ -34,6 +35,22 @@ class UserEntity implements EntityInterface {
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
     }
 
     /**
@@ -171,6 +188,7 @@ class UserEntity implements EntityInterface {
     {
         $dirtyData = [
             'id' => $this->getId(),
+            'role' => $this->getRole(),
             'email' => $this->getEmail(),
             'password' => $this->getPassword(),
             'password_token' => $this->getPasswordToken(),
@@ -197,6 +215,7 @@ class UserEntity implements EntityInterface {
     public function exchangeArray(array $data)
     {
         $this->setId((isset($data['id']) ? $data['id'] : null));
+        $this->setRole((isset($data['role']) ? $data['role'] : null));
         $this->setEmail((isset($data['email']) ? $data['email'] : null));
         $this->setpassword((isset($data['password']) ? $data['password'] : null));
         $this->setPasswordToken((isset($data['password_token']) ? $data['password_token'] : null));

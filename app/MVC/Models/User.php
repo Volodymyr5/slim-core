@@ -2,6 +2,7 @@
 
 namespace App\MVC\Models;
 
+use App\Core\Constant;
 use App\Core\CoreModel;
 use App\MVC\Entity\UserEntity;
 
@@ -79,6 +80,7 @@ class User extends CoreModel {
     {
         try {
             $newUser = \ORM::forTable(self::TABLE)->create();
+            $newUser->role = !empty($e->getRole()) ? $e->getRole() : Constant::ROLE_GUEST;
             $newUser->email = $e->getEmail();
             $newUser->password = $e->getPassword();
             $newUser->password_token = $e->getPasswordToken();

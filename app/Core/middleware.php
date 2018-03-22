@@ -22,8 +22,12 @@ $app->add(function ($request, $response, $next) use ($container) {
 
 // Run ACL
 $app->add(function ($request, $response, $next) use ($container) {
-    $acl = new \App\Core\Libs\Acl($container, $request);
-    $acl->isAllowed();
+    $acl = new \App\Core\Libs\Acl($container, $request, $response);
+
+    $container['page_allowed'] = $acl->isAllowed();
+    if (!$container['page_allowed']) {
+        return $response->withRedirect('/');
+    }
 
     // Continue middleware chain
     return $next($request, $response);

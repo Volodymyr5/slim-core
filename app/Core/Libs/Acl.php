@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Core\Libs;
+use App\Core\Constant;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -12,28 +14,41 @@ class Acl
 {
     private $container;
 
+    private $request;
+
+    private $response;
+
+    private $route;
+
     private $routeName;
 
     private $rules;
 
     private $allowedRoles;
 
-    const ROLE_GUEST = 1;
-    const ROLE_USER = 2;
-    const ROLE_EDITOR = 3;
-    const ROLE_ADMIN = 4;
+    const ROLE_GUEST = Constant::ROLE_GUEST;
+    const ROLE_USER = Constant::ROLE_USER;
+    const ROLE_EDITOR = Constant::ROLE_EDITOR;
+    const ROLE_ADMIN = Constant::ROLE_ADMIN;
+
+    const ROUTE_ALLOW = 'allow';
+    const ROUTE__DENY = 'deny';
 
     /**
      * Acl constructor.
      * @param ServerRequestInterface $request
      * @throws \Exception
      */
-    public function __construct(ContainerInterface $container, ServerRequestInterface $request)
+    public function __construct(ContainerInterface $container, ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->container = $container;
 
-        $route = $request->getAttribute('route');
-        $this->routeName = $route ? $route->getName() : '';
+        $this->request = $request;
+        $this->response = $response;
+
+        $this->route = $request->getAttribute('route');
+
+        $this->routeName = $this->route ? $this->route->getName() : '';
 
         $this->rules = [];
 
@@ -47,18 +62,49 @@ class Acl
         $this->rules();
     }
 
+    /**
+     * @throws \Exception
+     */
     private function rules()
     {
         // Auth
-        $this->set('allow', 'login', self::ROLE_GUEST);
-        $this->set('allow', 'register', self::ROLE_GUEST);
-        $this->set('allow', 'logout', [self::ROLE_USER, self::ROLE_EDITOR, self::ROLE_ADMIN]);
-        $this->set('allow', 'set-password', [self::ROLE_GUEST, self::ROLE_USER, self::ROLE_EDITOR, self::ROLE_ADMIN]);
+        $this->set(self::ROUTE_ALLOW, 'login', self::ROLE_GUEST);
+        $this->set(self::ROUTE_ALLOW, 'register', self::ROLE_GUEST);
+        $this->set(self::ROUTE_ALLOW, 'logout', [self::ROLE_USER, self::ROLE_EDITOR, self::ROLE_ADMIN]);
+        $this->set(self::ROUTE_ALLOW, 'set-password', $this->allowedRoles);
         // Index
-        $this->set('allow', 'home', [self::ROLE_GUEST, self::ROLE_USER, self::ROLE_EDITOR, self::ROLE_ADMIN]);
-        $this->set('allow', 'admin', self::ROLE_ADMIN);
+        $this->set(self::ROUTE_ALLOW, 'home', $this->allowedRoles);
+        $this->set(self::ROUTE_ALLOW, 'admin', self::ROLE_ADMIN);
+        $this->set(self::ROUTE_ALLOW, 'test', self::ROLE_ADMIN);
     }
 
+    /**
+     * @param null $role
+     * @param null $route
+     * @return bool
+     */
+    public function isAllowed($role = null, $route = null)
+    {
+        $role = $role ? $role : $this->getVisitorRole();
+        $route = $route ? $route : $this->routeName;
+
+        $isAllowed = false;
+        foreach ($this->rules as $rule) {
+            $rule['roles'] = is_array($rule['roles']) ? $rule['roles'] : [$rule['roles']];
+            if ($route == $rule['route'] && in_array($role, $rule['roles'])) {
+                $isAllowed = $rule['type'];
+            }
+        }
+
+        return $isAllowed;
+    }
+
+    /**
+     * @param $allowOrDeny
+     * @param $route
+     * @param $roles
+     * @throws \Exception
+     */
     private function set($allowOrDeny, $route, $roles)
     {
         $allowOrDeny = is_string($allowOrDeny) ? mb_strtolower($allowOrDeny, 'UTF-8') : '';
@@ -81,11 +127,6 @@ class Acl
             'route' => $route,
             'roles' => $roles,
         ];
-    }
-
-    public function isAllowed()
-    {
-        var_dump($this->rules);
     }
 
     /**
