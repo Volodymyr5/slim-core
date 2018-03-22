@@ -92,7 +92,7 @@ class ClassName extends CoreModel {
 
 `ClassName` - should be the same as table column name
 
-#### More info aboute usage IdiORM see in docs
+#### More info about usage IdiORM see in docs
 [http://idiorm.readthedocs.io](http://idiorm.readthedocs.io)
 
 ### 4. Form builder and validator
@@ -231,4 +231,4 @@ $this->addAllowedRole('USER', \App\Core\Constant::ROLE_USER);
 to adding need role in your app (do it **before** call ```parent::__construct```) 
 
 In method ```rules()``` add rules for your **named** routes
-> ACL work only with **named** routes. All routes that what you don't specify in ACL will be marked as **DENY**.
+> ACL work only with **named** routes. All routes that you don't specify in ACL will be marked as **DENY**.
