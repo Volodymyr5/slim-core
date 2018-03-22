@@ -24,8 +24,8 @@ $app->add(function ($request, $response, $next) use ($container) {
 $app->add(function ($request, $response, $next) use ($container) {
     $acl = new \App\Core\Libs\Acl($container, $request, $response);
 
-    $container['page_allowed'] = $acl->isAllowed();
-    if (!$container['page_allowed']) {
+    $container['acl'] = $acl;
+    if (!$acl->isAllowed()) {
         return $response->withRedirect('/');
     }
 

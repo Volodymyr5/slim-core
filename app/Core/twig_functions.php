@@ -36,3 +36,11 @@ $view->getEnvironment()->addFunction(new \Twig_Function('get_site_url', function
 
     return $config->render();
 }));
+
+// Get Is Route Allowed Helper
+$view->getEnvironment()->addFunction(new \Twig_Function('is_route_allowed', function () use ($container) {
+    $routeName = func_get_arg(0) ? func_get_arg(0) : '';
+    $assets = new \App\MVC\ViewHelpers\IsRouteAllowed($container, $routeName);
+
+    return $assets->render();
+}));

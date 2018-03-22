@@ -33,8 +33,6 @@ class IndexController extends CoreController
      */
     public function admin($request, $response)
     {
-        var_dump($this->container->page_allowed);
-
         return $this->view->render($response, 'index\index\index.twig', [
             'users' => 'admin'
         ]);

@@ -2,12 +2,12 @@
 
 ## Contain
 1. [Map Routing to Controller `app/MVC/routes/*.php`](#1-map-routing-to-controller-approutesphp)
-2. [Twig View, Layout and `path_for()` - path builder `app/MVC/views` | `"slim/twig-view"`](#2-twig-view-layout-and-path_for---path-builder-appviews--slimtwig-view)
-3. [CSRF protection with method - `{{ csrf_tokens() | raw }}` | `slim/csrf`](#3-csrf-protection-with-method)
-4. [ORM for SQLite and MySQL with - `"j4mie/idiorm"`](#4-orm-for-sqlite-and-mysql-with---j4mieidiorm)
-5. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#5-form-builder-and-validator)
-6. [SMTP Mailer example from - `github/swt83/php-smtp`](#6-smtp-mailer-example-from)
-7. [Alert and Notifications using - `slim/flash`](#7-alert-and-notifications)
+2. [Twig View, Layout and View Helpers](#2-twig-view-layout-and-view-helpers)
+3. [ORM for SQLite and MySQL with - `"j4mie/idiorm"`](#3-orm-for-sqlite-and-mysql-with---j4mieidiorm)
+4. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#4-form-builder-and-validator)
+5. [SMTP Mailer example from - `github/swt83/php-smtp`](#5-smtp-mailer-example-from)
+6. [Alert and Notifications using - `slim/flash`](#6-alert-and-notifications)
+7. [Access Control List](#6-access-control-list)
 
 ## Description
 In project for Controllers use such folder structure:
@@ -40,7 +40,7 @@ $app->any('/', \App\MVC\Controllers\Index\IndexController::class . ':index')->se
 require __DIR__ . '/routes/*.php';
 ```
 
-### 2. Twig View, Layout and `path_for()` - path builder `app/MVC/views` | `"slim/twig-view"`
+### 2. Twig View, Layout and View Helpers - `"slim/twig-view"`
 #### Usage
 in any Controller use:
 ```php
@@ -51,24 +51,30 @@ return $this->view->render($response, 'index\index\index.twig', [
 
 In Twig view you can use:
 
-1\. URL constructor
+1\. **URL constructor**
 
 ```twig
 {{ path_for('<route name>', { '<route var1>': '<route var1 value>' }) }}
 ```
 
-2\. URL to assets constructor
+2\. **URL to assets constructor**
 ```twig
 {{ assets('path/to/script.js') }}` - convert to `/base/path/assets/path/to/script.js
 ```
 
-3\. Current route variable - `currentRoute`
+3\. **Current route variable - `currentRoute`**
 
-### 3. CSRF protection with method
-#### Usage:
-In any form add `{{ csrf_tokens() | raw }}` to pass CSRF check
+4\. **csrf_tokens()**
+CSRF protection with method - `{{ csrf_tokens() | raw }}`. Use it inside all your ```<form>``` in views. It will process CSRF check.
 
-### 4. ORM for SQLite and MySQL with - `"j4mie/idiorm"`
+5\. **get_site_url()**
+With method - `{{ get_site_url() }}` you can receive full path for your website in view
+ 
+6\. **is_route_allowed('route_name')**
+Use it to check if is need for you route are allowed for current user ```{% if is_route_allowed('route_name') %}{% endif %}```.
+As example to show link for protected page.
+
+### 3. ORM for SQLite and MySQL with - `"j4mie/idiorm"`
 #### Usage:
 In `app/MVC/Models/` create class:
 ```php
@@ -89,7 +95,7 @@ class ClassName extends CoreModel {
 #### More info aboute usage IdiORM see in docs
 [http://idiorm.readthedocs.io](http://idiorm.readthedocs.io)
 
-### 5. Form builder and validator
+### 4. Form builder and validator
 #### Usage:
 Create Form class in `app/Forms`
 ```php
@@ -173,7 +179,7 @@ if ($request->isPost()) {
 #### More info and details
 [https://github.com/akrabat/slim-zendform](https://github.com/akrabat/slim-zendform)
 
-### 6. SMTP Mailer example from
+### 5. SMTP Mailer example from
 #### Usage:
 in any Controller use:
 ```php
@@ -193,7 +199,7 @@ $this->sendMail([
 #### More info and details
 [https://github.com/swt83/php-smtp](https://github.com/swt83/php-smtp)
 
-### 7. Alert and Notifications
+### 6. Alert and Notifications
 #### Usage:
 In Controller use one of:
 ```php
@@ -215,3 +221,14 @@ To allow Alerts and Notification in your custom layout use View Helper:
 
 #### More info and details
 [https://github.com/slimphp/Slim-Flash](https://github.com/slimphp/Slim-Flash)
+
+### 7. Access Control List
+#### Usage
+In ```app/Core/Libs/Acl.php``` inside ```__constructor``` use method
+```
+$this->addAllowedRole('USER', \App\Core\Constant::ROLE_USER);
+```
+to adding need role in your app (do it **before** call ```parent::__construct```) 
+
+In method ```rules()``` add rules for your **named** routes
+> ACL work only with **named** routes. All routes that what you don't specify in ACL will be marked as **DENY**.

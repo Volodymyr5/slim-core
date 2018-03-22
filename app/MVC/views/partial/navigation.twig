@@ -4,10 +4,11 @@
         <nav class="uk-navbar-container" uk-navbar>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <li{{ (currentRoute == 'home') ? ' class="uk-active"' : '' }}><a href="{{ path_for('home') }}">Home</a></li>
-                    <li{{ (currentRoute == 'login') ? ' class="uk-active"' : '' }}><a href="{{ path_for('login') }}">Sgin In</a></li>
-                    <li{{ (currentRoute == 'register') ? ' class="uk-active"' : '' }}><a href="{{ path_for('register') }}">Sgin Up</a></li>
-                    <li{{ (currentRoute == 'logout') ? ' class="uk-active"' : '' }}><a href="{{ path_for('logout') }}">Sgin Out</a></li>
+                    {% if is_route_allowed('home') %}<li{{ (currentRoute == 'home') ? ' class="uk-active"' : '' }}><a href="{{ path_for('home') }}">Home</a></li>{% endif %}
+                    {% if is_route_allowed('admin') %}<li{{ (currentRoute == 'admin') ? ' class="uk-active"' : '' }}><a href="{{ path_for('admin') }}">Admin</a></li>{% endif %}
+                    {% if is_route_allowed('login') %}<li{{ (currentRoute == 'login') ? ' class="uk-active"' : '' }}><a href="{{ path_for('login') }}">Login</a></li>{% endif %}
+                    {% if is_route_allowed('register') %}<li{{ (currentRoute == 'register') ? ' class="uk-active"' : '' }}><a href="{{ path_for('register') }}">Register</a></li>{% endif %}
+                    {% if is_route_allowed('logout') %}<li{{ (currentRoute == 'logout') ? ' class="uk-active"' : '' }}><a href="{{ path_for('logout') }}">Logout</a></li>{% endif %}
                 </ul>
             </div>
         </nav>
