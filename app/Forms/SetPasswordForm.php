@@ -72,7 +72,10 @@ class SetPasswordForm extends Form implements InputFilterProviderInterface
             'required' => true,
             'validators' => [
                 [
-                    'name' => '\App\Forms\Validators\IsPasswordTokenValid'
+                    'name' => '\App\Forms\Validators\IsPasswordTokenValid',
+                    'options' => [
+                        'container' => $this->getOption('container'),
+                    ]
                 ],
             ],
         ];

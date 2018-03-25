@@ -24,7 +24,7 @@ class EmailPasswordInDB extends AbstractValidator
      */
     public function isValid($value, $context = null)
     {
-        $u = new User();
+        $u = new User($this->getOption('container'));
 
         $this->setValue($value);
 
@@ -34,14 +34,14 @@ class EmailPasswordInDB extends AbstractValidator
             return false;
         }
 
-        $user = $u->getByEmail($context['email']);
+        $user = $u->getByField('email', $context['email']);
 
-        if (empty($user->password)) {
+        if (empty($user['password'])) {
             $this->error(self::INVALID);
             return false;
         }
 
-        if (password_verify($value, $user->password)) {
+        if (password_verify($value, $user['password'])) {
             return true;
         } else {
             $this->error(self::INVALID);

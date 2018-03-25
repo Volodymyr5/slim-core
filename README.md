@@ -3,7 +3,7 @@
 ## Contain
 1. [Map Routing to Controller `app/MVC/routes/*.php`](#1-map-routing-to-controller-approutesphp)
 2. [Twig View, Layout and View Helpers](#2-twig-view-layout-and-view-helpers)
-3. [ORM for SQLite and MySQL with - `"j4mie/idiorm"`](#3-orm-for-sqlite-and-mysql-with---j4mieidiorm)
+3. [PDO wrapper for SQLite and MySQL with - `"envms/fluentpdo"`](#3-pdo-wrapper-for-sqlite-and-mysql-with---envms/fluentpdo)
 4. [Form builder and validator from ZF2 example from - `github/akrabat/slim-zendform`](#4-form-builder-and-validator)
 5. [SMTP Mailer example from - `github/swt83/php-smtp`](#5-smtp-mailer-example-from)
 6. [Alert and Notifications using - `slim/flash`](#6-alert-and-notifications)
@@ -74,7 +74,7 @@ With method - `{{ get_site_url() }}` you can receive full path for your website 
 Use it to check if is need for you route are allowed for current user ```{% if is_route_allowed('route_name') %}{% endif %}```.
 As example to show link for protected page.
 
-### 3. ORM for SQLite and MySQL with - `"j4mie/idiorm"`
+### 3. PDO wrapper for SQLite and MySQL with - `"envms/fluentpdo"`
 #### Usage:
 In `app/MVC/Models/` create class:
 ```php
@@ -92,8 +92,8 @@ class ClassName extends CoreModel {
 
 `ClassName` - should be the same as table column name
 
-#### More info about usage IdiORM see in docs
-[http://idiorm.readthedocs.io](http://idiorm.readthedocs.io)
+#### More info about usage FluentPDO see in docs
+[http://envms.github.io/fluentpdo/](http://envms.github.io/fluentpdo/)
 
 ### 4. Form builder and validator
 #### Usage:

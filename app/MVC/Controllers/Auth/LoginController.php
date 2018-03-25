@@ -27,8 +27,8 @@ class LoginController extends CoreController
             $isValid = $form->isValid();
             if ($isValid) {
                 $formData = $form->getData();
-                $currUser = $u->getByEmail($formData['email']);
-                $currUser = $currUser->asArray();
+                $currUser = $u->getByField('email', $formData['email']);
+
                 if (!empty($currUser['id'])) {
                     $this->container->user->login($currUser['id']);
 

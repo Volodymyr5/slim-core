@@ -35,7 +35,7 @@ EOT
         // Debug mode will echo connection status alerts to
         // the screen throughout the email sending process.
         // Very helpful when testing your credentials.
-        'debug_mode' => true,
+        'debug_mode' => DEBUG,
         // Define the different connections that can be used.
         // You can set which connection to use when you create
         // the SMTP object: ``$mail = new SMTP('my_connection')``.

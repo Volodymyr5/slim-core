@@ -80,8 +80,8 @@ class Auth
      */
     public function login($userId)
     {
-        $t = new Token();
-        $u = new User();
+        $t = new Token($this->container);
+        $u = new User($this->container);
 
         $token = $this->getTokenFromSession();
         $lastSession = $this->getNeedSession($token);
@@ -93,7 +93,7 @@ class Auth
 
             $t->modify($te);
 
-            $user = $u->getById($userId);
+            $user = $u->getByField('id', $userId);
             if ($user) {
                 $this->setUserIdentityInSession($user);
             }
@@ -109,7 +109,7 @@ class Auth
      */
     public function logout()
     {
-        $t = new Token();
+        $t = new Token($this->container);
 
         $token = $this->getTokenFromCookie();
         $lastSession = $this->getNeedSession($token);
@@ -166,7 +166,7 @@ class Auth
      */
     private function checkTokenInDB($token)
     {
-        $t = new Token();
+        $t = new Token($this->container);
 
         $dbTokensCount = count($t->getAll([
             'token' => $token,
@@ -184,8 +184,8 @@ class Auth
      */
     private function updateTokenInDB($oldToken, $clearUser = false, $newSession = false)
     {
-        $t = new Token();
-        $u = new User();
+        $t = new Token($this->container);
+        $u = new User($this->container);
 
         $newToken = $this->createNewToken($oldToken);
 
@@ -229,7 +229,7 @@ class Auth
      */
     private function getNeedSession($oldToken)
     {
-        $t = new Token();
+        $t = new Token($this->container);
 
         $oldToken = $oldToken ? $oldToken : '';
 
@@ -243,7 +243,6 @@ class Auth
         ]);
 
         $session = !empty($session[0]) ? $session[0] : null;
-        $session = !empty($session->token) ? $session->asArray() : null;
 
         return $session;
     }

@@ -2,12 +2,9 @@
 
 namespace App\Forms;
 
-use App\Forms\Validators\CustomAlpha;
-use \Zend\Validator\Callback;
 use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\Identical;
 use Zend\Validator\StringLength;
 
 /**
@@ -112,7 +109,12 @@ class LoginForm extends Form implements InputFilterProviderInterface
                         ]
                     ]
                 ],
-                ['name' => '\App\Forms\Validators\EmailPasswordInDB'],
+                [
+                    'name' => '\App\Forms\Validators\EmailPasswordInDB',
+                    'options' => [
+                        'container' => $this->getOption('container'),
+                    ]
+                ],
             ],
         ];
 

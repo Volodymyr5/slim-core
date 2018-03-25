@@ -123,7 +123,12 @@ class RegisterForm extends Form implements InputFilterProviderInterface
             ],
             'validators' => [
                 ['name' => 'EmailAddress'],
-                ['name' => '\App\Forms\Validators\UniqueEmailInDB'],
+                [
+                    'name' => '\App\Forms\Validators\UniqueEmailInDB',
+                    'options' => [
+                        'container' => $this->getOption('container'),
+                    ]
+                ],
                 [
                     'name' => 'StringLength',
                     'options' => [

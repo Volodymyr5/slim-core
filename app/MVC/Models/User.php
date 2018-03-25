@@ -2,7 +2,6 @@
 
 namespace App\MVC\Models;
 
-use App\Core\Constant;
 use App\Core\CoreModel;
 use App\MVC\Entity\UserEntity;
 
@@ -15,6 +14,22 @@ class User extends CoreModel {
     const TABLE = 'user';
     const USER_META_TABLE = 'user_meta';
 
+    const COLUMNS = [
+        self::TABLE . '.id',
+        self::TABLE . '.role',
+        self::TABLE . '.email',
+        self::TABLE . '.password',
+        self::TABLE . '.password_token',
+        self::TABLE . '.token_expiration',
+        self::TABLE . '.created',
+        self::TABLE . '.updated',
+    ];
+
+    const META_COLUMNS = [
+        self::USER_META_TABLE . '.first_name',
+        self::USER_META_TABLE . '.last_name',
+    ];
+
     /**
      * @param array $params
      * @return array
@@ -25,119 +40,157 @@ class User extends CoreModel {
         $params['email'] = isset($params['email']) ? $params['email'] : null;
         $params['password'] = isset($params['password']) ? $params['password'] : null;
         $params['password_token'] = isset($params['password_token']) ? $params['password_token'] : null;
+        $params['first_name'] = isset($params['first_name']) ? $params['first_name'] : null;
+        $params['last_name'] = isset($params['last_name']) ? $params['last_name'] : null;
 
         $query = $this->getQuery();
 
         if (!empty($params['ids'])) {
-            $query->where_id_in($params['ids']);
+            $query->where(self::TABLE . '.id', $params['ids']);
         }
 
         if ($params['email']) {
-            $query->where('email', $params['email']);
+            $query->where(self::TABLE . '.email like ?', "%{$params['email']}%");
         }
 
         if ($params['password']) {
-            $query->where('password', $params['password']);
+            $query->where(self::TABLE . '.password', $params['password']);
         }
 
         if ($params['password_token']) {
-            $query->where('password_token', $params['password_token']);
+            $query->where(self::TABLE . '.password_token', $params['password_token']);
         }
 
-        return  $query->findArray();
+        if ($params['first_name']) {
+            $query->where(self::USER_META_TABLE . '.first_name like ?', "%{$params['first_name']}%");
+        }
+
+        if ($params['last_name']) {
+            $query->where(self::USER_META_TABLE . '.last_name like ?', "%{$params['last_name']}%");
+        }
+
+        return $this->extract($query);
     }
 
     /**
-     * @param $email
-     * @return bool|\ORM
+     * @param $name
+     * @param $value
+     * @return array
      */
-    public function getByEmail($email)
+    public function getByField($name, $value)
     {
+        $name = $name == 'id' ? self::TABLE . '.id' : $name;
+
         $query = $this->getQuery();
 
-        return $query->where('email', $email)->findOne();
-    }
+        $query->where($name, $value);
 
-    /**
-     * @param $id
-     * @return bool|\ORM
-     */
-    public function getById($id)
-    {
-        $query = $this->getQuery();
-
-        $user = $query->where('id', $id)->findOne();
-
-        return $user ? $user->asArray() : null;
+        return $this->extract($query, true);
     }
 
     /**
      * @param UserEntity $e
-     * @return array|mixed|null
+     * @param bool $updateMeta
+     * @return int
      * @throws \Exception
      */
-    public function create(UserEntity $e)
-    {
-        try {
-            $newUser = \ORM::forTable(self::TABLE)->create();
-            $newUser->role = !empty($e->getRole()) ? $e->getRole() : Constant::ROLE_GUEST;
-            $newUser->email = $e->getEmail();
-            $newUser->password = $e->getPassword();
-            $newUser->password_token = $e->getPasswordToken();
-            $newUser->token_expiration = $e->getTokenExpiration();
-            $newUser->save();
-            $newUserId = $newUser->id;
-
-            if (
-                $e->getFirstName() ||
-                $e->getLastName()
-            ) {
-                $newUserMeta = \ORM::forTable(self::USER_META_TABLE)->create();
-                $newUserMeta->user_id = $newUserId;
-                $newUserMeta->first_name = $e->getFirstName();
-                $newUserMeta->last_name = $e->getLastName();
-                $newUserMeta->save();
-            }
-
-            return $newUserId;
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * @param UserEntity $e
-     * @throws \Exception
-     */
-    public function modify(UserEntity $e)
+    public function create(UserEntity $e, $updateMeta = false)
     {
         try {
             $data = $e->toArray();
 
-            $user = \ORM::forTable(self::TABLE)->findOne($e->getId());
-            $user->set($data);
-            $user->save();
-
-            if (
-                isset($data['first_name']) ||
-                isset($data['last_name'])
-            ) {
-                $userMeta = \ORM::forTable(self::USER_META_TABLE)->where('user_id', $e->getId())->findOne();
-                $userMeta->first_name = $e->getFirstName();
-                $userMeta->last_name = $e->getLastName();
-                $userMeta->save();
+            $mainData = [];
+            foreach ($data as $row => $value) {
+                $rowFullName = self::TABLE . ".{$row}";
+                if (in_array($rowFullName, self::COLUMNS)) {
+                    $mainData[$row] = $value;
+                }
             }
+
+            $id = $this->db->insertInto(self::TABLE, $mainData)->execute();
+
+            if ($updateMeta) {
+                $metaData = [];
+                foreach ($data as $row => $value) {
+                    $rowFullName = self::USER_META_TABLE . ".{$row}";
+                    if (in_array($rowFullName, self::META_COLUMNS)) {
+                        $metaData[$row] = $value;
+                    }
+                }
+
+                if (!empty($metaData['first_name'])) {
+                    $metaData['user_id'] = $id;
+
+                    $metaId = $this->db->insertInto(self::USER_META_TABLE, $metaData)->execute();
+                }
+            }
+
+            return $id;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
     }
 
     /**
-     * @return \ORM
+     * @param UserEntity $e
+     * @param bool $updateMeta
+     * @return int
+     * @throws \Exception
      */
-    protected function getQuery ()
+    public function modify(UserEntity $e, $updateMeta = false)
     {
-        $query = \ORM::forTable(self::TABLE);
+        try {
+            $data = $e->toArray();
+
+            $mainData = [];
+            foreach ($data as $row => $value) {
+                $rowFullName = self::TABLE . ".{$row}";
+                if (in_array($rowFullName, self::COLUMNS)) {
+                    $mainData[$row] = $value;
+                }
+            }
+
+            $id = $this->db->update(self::TABLE, $mainData, $e->getId())->execute();
+
+            if ($updateMeta) {
+                $metaData = [];
+                foreach ($data as $row => $value) {
+                    $rowFullName = self::USER_META_TABLE . ".{$row}";
+                    if (in_array($rowFullName, self::META_COLUMNS)) {
+                        $metaData[$row] = $value;
+                    }
+                }
+
+                if (!empty($metaData['first_name'])) {
+                    $metaId = $this->db->update(self::USER_META_TABLE)->set($metaData)->where('user_id', $e->getId())->execute();
+                }
+            }
+
+            return $id;
+
+
+            $data = $e->toArray();
+
+            $id = $this->db->update(self::TABLE, $data, $e->getId())->execute();
+
+            return $id;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * @return \BaseQuery
+     */
+    private function getQuery ()
+    {
+        $columns = array_merge(self::COLUMNS, self::META_COLUMNS);
+
+        $query = $this->db->from(self::TABLE);
+
+        $query->leftJoin(self::USER_META_TABLE . ':');
+
+        $query->select($columns);
 
         return $query;
     }

@@ -23,7 +23,7 @@ class IsPasswordTokenValid extends AbstractValidator
      */
     public function isValid($value)
     {
-        $u = new User();
+        $u = new User($this->getOption('container'));
 
         $this->setValue($value);
 

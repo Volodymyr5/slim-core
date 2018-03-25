@@ -25,7 +25,7 @@ class Token extends CoreModel {
         $params['expire'] = !empty($params['expire']) ? $params['expire'] : null;
         $params['limit'] = !empty($params['limit']) ? $params['limit'] : null;
         $params['sort'] = !empty($params['sort']) ? $params['sort'] : null;
-        $params['order'] = !empty($params['order']) ? $params['order'] : null;
+        $params['order'] = !empty($params['order']) && in_array($params['order'], ['asc', 'desc']) ? $params['order'] : null;
 
         $query = $this->getQuery();
 
@@ -42,7 +42,7 @@ class Token extends CoreModel {
         }
 
         if ($params['expire']) {
-            $query->where_gt('expire', $params['expire']);
+            $query->where('expire > ?', $params['expire']);
         }
 
         if ($params['limit']) {
@@ -50,16 +50,11 @@ class Token extends CoreModel {
         }
 
         if ($params['sort'] && $params['order']) {
-            if ($params['order'] == 'asc') {
-                $query->orderByAsc($params['sort']);
-            } elseif ($params['order'] == 'desc') {
-                $query->orderByDesc($params['sort']);
-            }
+            $params['order'] = strtoupper($params['order']);
+            $query->orderBy("{$params['sort']} {$params['order']}");
         }
 
-        $result = $query->findMany();
-
-        return $result;
+        return $this->extract($query);
     }
 
     /**
@@ -69,9 +64,11 @@ class Token extends CoreModel {
     public function getByToken($token)
     {
         $query = $this->getQuery();
-        $result = $query->where('token', $token)->findOne();
+        $query->where('token', $token);
 
-        return (array)$result;
+        $result = $this->extract($query, true);
+
+        return $result;
     }
 
     /**
@@ -82,14 +79,11 @@ class Token extends CoreModel {
     public function create(TokenEntity $e)
     {
         try {
-            $tokenData = $e->toArray();
+            $data = $e->toArray();
 
-            $newToken = \ORM::forTable(self::TABLE)->create();
-            $newToken->set($tokenData);
-            $newToken->save();
-            $newTokenId = $newToken->id;
+            $id = $this->db->insertInto(self::TABLE, $data)->execute();
 
-            return $newTokenId;
+            return $id;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -104,20 +98,33 @@ class Token extends CoreModel {
         try {
             $data = $e->toArray();
 
-            $token = \ORM::forTable(self::TABLE)->findOne($e->getId());
-            $token->set($data);
-            $token->save();
+            $id = $this->db->update(self::TABLE, $data, $e->getId())->execute();
+
+            return $id;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
     }
 
     /**
-     * @return \ORM
+     * @return \BaseQuery
      */
-    protected function getQuery ()
+    private function getQuery ()
     {
-        $query = \ORM::forTable(self::TABLE);
+        $columns = [
+            'id',
+            'user_id',
+            'visitor',
+            'token',
+            'ip',
+            'browser',
+            'start',
+            'end',
+            'expire',
+        ];
+
+        $query = $this->db->from(self::TABLE);
+        $query->select($columns);
 
         return $query;
     }

@@ -27,15 +27,27 @@ if (
 // Setup idiORM
 switch ($dbType) {
     case 'sqlight':
-        \ORM::configure('sqlite:' . $dbSettings['sqlight']['file_path']);
+        $pdoConnection = new PDO('sqlite:' . $dbSettings['sqlight']['file_path']);
         break;
     case 'mysql':
-        \ORM::configure('mysql:host=' . $dbSettings['mysql']['host'] . ';dbname=' . $dbSettings['mysql']['dbname']);
-        \ORM::configure('username', $dbSettings['mysql']['username']);
-        \ORM::configure('password', $dbSettings['mysql']['password']);
+        $pdoConnection = new PDO(
+            "mysql:host={$dbSettings['mysql']['host']};dbname={$dbSettings['mysql']['dbname']}",
+            $dbSettings['mysql']['username'],
+            $dbSettings['mysql']['password']
+        );
         break;
     default:
         throw new \Exception('Error. Wrong Data Base connection!');
 }
 
-\ORM::configure('logging', true);
+// Set errormode to exceptions
+if (DEBUG) {
+    $pdoConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
+
+$container['db'] = function ($container) use ($pdoConnection) {
+    $fpdo = new FluentPDO($pdoConnection);
+    //$fpdo->debug = DEBUG;
+
+    return $fpdo;
+};

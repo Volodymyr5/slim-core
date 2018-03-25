@@ -2,6 +2,8 @@
 
 namespace App\Core;
 use App\Core\Libs\SMTP;
+use App\MVC\Entity\TokenEntity;
+use App\MVC\Entity\UserEntity;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -22,8 +24,6 @@ class CoreController
 
         // JWT auth processing
         $container->user->update();
-
-        var_dump($container->user->getIdentity());
     }
 
     /**
@@ -48,7 +48,11 @@ class CoreController
         $containerServiceManager = $this->container['serviceManager'];
         $formElementManager = $containerServiceManager->get('FormElementManager');
 
-        return $formElementManager->get($formNameWithNamespace);
+        $form = $formElementManager->get($formNameWithNamespace);
+
+        $form->setOption('container', $this->container);
+
+        return $form;
     }
 
     /**

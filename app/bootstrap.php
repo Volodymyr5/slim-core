@@ -4,6 +4,9 @@ session_start();
 // Composer autoload
 require __DIR__ . '/vendor/autoload.php';
 
+define('DEBUG', true);
+date_default_timezone_set('UTC');
+
 // App settings
 $customSettings = require_once __DIR__ . '/config/settings.php';
 try {
@@ -16,7 +19,7 @@ $customSettings = array_merge($customSettings, $localSettings);
 // Slim app instance
 $app = new \Slim\App([
     'settings' => [
-        'debug' => true,
+        'debug' => DEBUG,
         'whoops.editor' => 'sublime',
         'custom' => $customSettings,
         'determineRouteBeforeAppMiddleware' => true,

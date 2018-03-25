@@ -24,6 +24,9 @@ class SetPasswordController extends CoreController
         $token = $request->getParam('t', '');
 
         $isPasswordTokenValid = new IsPasswordTokenValid();
+        $isPasswordTokenValid->setOptions([
+            'container' => $this->container
+        ]);
 
         $form = $this->getForm('App\Forms\SetPasswordForm');
 
