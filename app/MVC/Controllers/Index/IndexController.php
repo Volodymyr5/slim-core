@@ -3,6 +3,9 @@
 namespace App\MVC\Controllers\Index;
 
 use \App\Core\CoreController;
+use App\MVC\Models\User;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class IndexController
@@ -11,13 +14,13 @@ use \App\Core\CoreController;
 class IndexController extends CoreController
 {
     /**
-     * @param $request
-     * @param $response
+     * @param Request $request
+     * @param Response $response
      * @return mixed
      */
-    public function index($request, $response)
+    public function index(Request $request, Response $response)
     {
-        $u = $this->getModel('User');
+        $u = new User($this->container);
 
         $users = $u->getAll();
 
@@ -27,11 +30,11 @@ class IndexController extends CoreController
     }
 
     /**
-     * @param $request
-     * @param $response
+     * @param Request $request
+     * @param Response $response
      * @return mixed
      */
-    public function admin($request, $response)
+    public function admin(Request $request, Response $response)
     {
         return $this->view->render($response, 'index\index\index.twig', [
             'users' => 'admin'

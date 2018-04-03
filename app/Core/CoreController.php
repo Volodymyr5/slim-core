@@ -154,6 +154,18 @@ class CoreController
     }
 
     /**
+     * @param $view
+     * @param array $params
+     * @return string
+     */
+    protected function getEmailBody($view, $params = [])
+    {
+        $mailBody = $this->view->render($this->container->response, $view, $params);
+
+        return strval($mailBody->getBody());
+    }
+
+    /**
      * @param null $fromName
      * @return SMTP|bool
      */

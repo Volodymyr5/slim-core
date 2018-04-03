@@ -8,10 +8,10 @@ use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\StringLength;
 
 /**
- * Class LoginForm
+ * Class ForgotPasswordForm
  * @package App\Forms
  */
-class LoginForm extends Form implements InputFilterProviderInterface
+class ForgotPasswordForm extends Form implements InputFilterProviderInterface
 {
     /**
      * Init form
@@ -32,18 +32,6 @@ class LoginForm extends Form implements InputFilterProviderInterface
             'placeholder' => 'Email',
         ]);
 
-        // Password
-        $password = new Element\Password('password');
-        $password->setLabelAttributes([
-            'for' => $formName . $password->getAttribute('name'),
-        ]);
-        $password->setAttributes([
-            'id' => $formName . $password->getAttribute('name'),
-            'class' => 'uk-input',
-            'required' => 'required',
-            'placeholder' => 'Password',
-        ]);
-
         // Submit button
         $submit = new Element\Submit('submit');
         $submit->setAttributes([
@@ -55,7 +43,6 @@ class LoginForm extends Form implements InputFilterProviderInterface
 
         // Add elements to form
         $this->add($email);
-        $this->add($password);
         $this->add($submit);
     }
 
@@ -85,42 +72,18 @@ class LoginForm extends Form implements InputFilterProviderInterface
                         ]
                     ]
                 ],
-            ]
-        ];
-
-        // Password
-        $password = [
-            'required' => true,
-            'filters' => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-                ['name' => 'StripNewLines'],
-            ],
-            'validators' => [
+                ['name' => 'EmailAddress'],
                 [
-                    'name' => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min' => 2,
-                        'max' => 255,
-                        'messages' => [
-                            StringLength::TOO_SHORT => 'Minimum length - %min% characters',
-                            StringLength::TOO_LONG => 'Maximum length - %max% characters',
-                        ]
-                    ]
-                ],
-                [
-                    'name' => '\App\Forms\Validators\EmailPasswordInDB',
+                    'name' => '\App\Forms\Validators\ExistEmailInDB',
                     'options' => [
                         'container' => $this->getOption('container'),
                     ]
                 ],
-            ],
+            ]
         ];
 
         return [
             'email' => $email,
-            'password' => $password,
         ];
     }
 }

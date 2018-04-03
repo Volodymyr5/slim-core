@@ -3,6 +3,9 @@
 namespace App\MVC\Controllers\Auth;
 
 use \App\Core\CoreController;
+use App\MVC\Models\User;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class LoginController
@@ -11,13 +14,13 @@ use \App\Core\CoreController;
 class LoginController extends CoreController
 {
     /**
-     * @param $request
-     * @param $response
+     * @param Request $request
+     * @param Response $response
      * @return mixed
      */
-    public function index($request, $response)
+    public function index(Request $request, Response $response)
     {
-        $u = $this->getModel('User');
+        $u = new User($this->container);
 
         $form = $this->getForm('App\Forms\LoginForm');
 
@@ -48,11 +51,11 @@ class LoginController extends CoreController
     }
 
     /**
-     * @param $request
-     * @param $response
+     * @param Request $request
+     * @param Response $response
      * @return mixed
      */
-    public function logout ($request, $response)
+    public function logout (Request $request, Response $response)
     {
         $this->container->user->logout();
 

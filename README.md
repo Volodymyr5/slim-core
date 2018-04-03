@@ -196,6 +196,13 @@ $this->sendMail([
 ]);
 ```
 
+To render Email body from Twig view use:
+```php
+$this->getEmailBody('emails\<view name>', [
+    'view' => 'parameters',
+]),
+```
+
 #### More info and details
 [https://github.com/swt83/php-smtp](https://github.com/swt83/php-smtp)
 

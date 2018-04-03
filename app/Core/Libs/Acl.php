@@ -4,8 +4,8 @@ namespace App\Core\Libs;
 use App\Core\Constant;
 use App\Core\CoreAcl;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class Acl
@@ -16,11 +16,11 @@ class Acl extends CoreAcl
     /**
      * Acl constructor.
      * @param ContainerInterface $container
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @param Request $request
+     * @param Response $response
      * @throws \Exception
      */
-    public function __construct(ContainerInterface $container, ServerRequestInterface $request, ResponseInterface $response)
+    public function __construct(ContainerInterface $container, Request $request, Response $response)
     {
         $this->addAllowedRole('USER', Constant::ROLE_USER);
         $this->addAllowedRole('EDITOR', Constant::ROLE_EDITOR);
@@ -38,6 +38,7 @@ class Acl extends CoreAcl
     {
         // Auth
         $this->set(self::ROUTE_ALLOW, 'login', $this->getRoles('GUEST'));
+        $this->set(self::ROUTE_ALLOW, 'forgot-password', $this->getRoles('GUEST'));
         $this->set(self::ROUTE_ALLOW, 'register', $this->getRoles('GUEST'));
         $this->set(self::ROUTE_ALLOW, 'logout', $this->getRoles());
         $this->set(self::ROUTE__DENY, 'logout', $this->getRoles('GUEST'));

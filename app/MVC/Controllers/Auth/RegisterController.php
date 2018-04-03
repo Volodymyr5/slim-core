@@ -4,6 +4,9 @@ namespace App\MVC\Controllers\Auth;
 
 use \App\Core\CoreController;
 use App\MVC\Entity\UserEntity;
+use App\MVC\Models\User;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * Class RegisterController
@@ -12,13 +15,13 @@ use App\MVC\Entity\UserEntity;
 class RegisterController extends CoreController
 {
     /**
-     * @param $request
-     * @param $response
+     * @param Request $request
+     * @param Response $response
      * @return mixed
      */
-    public function index($request, $response)
+    public function index(Request $request, Response $response)
     {
-        $u = $this->getModel('User');
+        $u = new User($this->container);
         $form = $this->getForm('App\Forms\RegisterForm');
 
         if ($request->isPost()) {
@@ -39,11 +42,7 @@ class RegisterController extends CoreController
                     'last_name' => $data['last_name'],
                 ]);
 
-                $u->create($ue);
-
-                $mailBody = $this->view->render($response, 'emails\registration_confirm.twig', [
-                    'password_token' => $ue->getPasswordToken()
-                ]);
+                $u->create($ue, true);
 
                 $userFullName = $ue->getFirstName() . ((strlen($ue->getLastName()) > 0) ? ' ' . $ue->getLastName() : '');
 
@@ -53,7 +52,9 @@ class RegisterController extends CoreController
                     $this->sendMail([
                         'to' => $ue->getEmail(),
                         'subject' => 'Hello ' . $userFullName . '! Confirm your email. ' . $projectName,
-                        'body' => strval($mailBody->getBody()),
+                        'body' => $this->getEmailBody('emails\registration_confirm.twig', [
+                            'password_token' => $ue->getPasswordToken()
+                        ]),
                         'from_name' => 'No reply'
                     ]);
 

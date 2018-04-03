@@ -167,13 +167,6 @@ class User extends CoreModel {
             }
 
             return $id;
-
-
-            $data = $e->toArray();
-
-            $id = $this->db->update(self::TABLE, $data, $e->getId())->execute();
-
-            return $id;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

@@ -21,7 +21,13 @@
                             {{ formRow(form.get('email')) }}
                         </div>
 
-                        {{ formRow(form.get('submit')) }}
+                        <div class="uk-margin uk-text-right">
+                            {{ formRow(form.get('submit')) }}
+                        </div>
+
+                        <p>
+                            <a href="{{ path_for('login') }}" class="uk-align-right uk-margin-remove">Login</a>
+                        </p>
                     </form>
                 </div>
             </div>

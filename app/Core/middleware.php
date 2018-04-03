@@ -4,7 +4,7 @@ $container->csrf->setPersistentTokenMode(true);
 $app->add($container->csrf);
 
 // Add currentRoute variable to Twig global
-$app->add(function ($request, $response, $next) use ($container) {
+$app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, $next) use ($container) {
     // retrieve value of route
     $route = $request->getAttribute('route');
     $name = false;
@@ -21,7 +21,7 @@ $app->add(function ($request, $response, $next) use ($container) {
 });
 
 // Run ACL
-$app->add(function ($request, $response, $next) use ($container) {
+$app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, $next) use ($container) {
     $acl = new \App\Core\Libs\Acl($container, $request, $response);
 
     $container['acl'] = $acl;

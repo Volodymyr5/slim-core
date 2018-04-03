@@ -63,7 +63,7 @@ class RegisterForm extends Form implements InputFilterProviderInterface
         $submit = new Element\Submit('submit');
         $submit->setAttributes([
             'id' => $formName . $submit->getAttribute('name'),
-            'value' => 'Sign Up',
+            'value' => 'Submit',
             'class' => 'uk-button uk-button-primary',
             'type' => 'submit'
         ]);
