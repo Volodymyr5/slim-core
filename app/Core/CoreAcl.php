@@ -23,6 +23,8 @@ class CoreAcl
     const ROUTE_ALLOW = 'allow';
     const ROUTE__DENY = 'deny';
 
+    const GUEST_ROLE = 1;
+
     /**
      * Acl constructor.
      * @param ServerRequestInterface $request
@@ -39,7 +41,7 @@ class CoreAcl
         $this->rules = [];
         $this->allowedRoles = !empty($this->allowedRoles) ? $this->allowedRoles : [];
 
-        $this->addAllowedRole('GUEST', 1);
+        $this->addAllowedRole('GUEST', self::GUEST_ROLE);
 
         $this->rules();
     }
@@ -63,6 +65,24 @@ class CoreAcl
         }
 
         return $isAllowed;
+    }
+
+    /**
+     * @param null $roleName
+     * @return array
+     * @throws \Exception
+     */
+    public function getRoles($roleName = null)
+    {
+        if ($roleName != null && (!is_string($roleName) || empty($roleName))) {
+            throw new \Exception('ACL->getRoles() $roleName should be String');
+        }
+
+        if (isset($this->allowedRoles[$roleName])) {
+            return $this->allowedRoles[$roleName];
+        } else {
+            return $this->allowedRoles;
+        }
     }
 
     /**
@@ -119,24 +139,6 @@ class CoreAcl
         }
 
         $this->allowedRoles[$roleName] = $roleId;
-    }
-
-    /**
-     * @param null $roleName
-     * @return array
-     * @throws \Exception
-     */
-    protected function getRoles($roleName = null)
-    {
-        if ($roleName != null && (!is_string($roleName) || empty($roleName))) {
-            throw new \Exception('ACL->getRoles() $roleName should be String');
-        }
-
-        if (isset($this->allowedRoles[$roleName])) {
-            return $this->allowedRoles[$roleName];
-        } else {
-            return $this->allowedRoles;
-        }
     }
 
     /**

@@ -44,3 +44,11 @@ $view->getEnvironment()->addFunction(new \Twig_Function('is_route_allowed', func
 
     return $assets->render();
 }));
+
+// Get Is Role Helper
+$view->getEnvironment()->addFunction(new \Twig_Function('is_role', function () use ($container) {
+    $roles = func_get_arg(0) ? func_get_arg(0) : '';
+    $result = new \App\MVC\ViewHelpers\IsRole($container, $roles);
+
+    return $result->render();
+}));

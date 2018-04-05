@@ -2,10 +2,18 @@
     <div class="uk-container uk-container-expand uk-padding-remove">
 
         <nav class="uk-navbar-container" uk-navbar>
+            <div class="uk-navbar-left">
+                {% if is_role(['EDITOR', 'ADMIN']) %}
+                    <a class="uk-navbar-toggle" uk-navbar-toggle-icon  uk-toggle="target: #side-menu"></a>
+                {% endif %}
+            </div>
+
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     {% if is_route_allowed('home') %}<li{{ (currentRoute == 'home') ? ' class="uk-active"' : '' }}><a href="{{ path_for('home') }}">Home</a></li>{% endif %}
-                    {% if is_route_allowed('admin') %}<li{{ (currentRoute == 'admin') ? ' class="uk-active"' : '' }}><a href="{{ path_for('admin') }}">Admin</a></li>{% endif %}
+                    {% if is_route_allowed('admin') %}
+                        <li{{ (currentRoute == 'admin') ? ' class="uk-active"' : '' }}><a href="{{ path_for('admin') }}">Admin</a></li>
+                    {% endif %}
                     {% if is_route_allowed('login') %}<li{{ (currentRoute == 'login') ? ' class="uk-active"' : '' }}><a href="{{ path_for('login') }}">Login</a></li>{% endif %}
                     {% if is_route_allowed('register') %}<li{{ (currentRoute == 'register') ? ' class="uk-active"' : '' }}><a href="{{ path_for('register') }}">Register</a></li>{% endif %}
                     {% if is_route_allowed('logout') %}<li{{ (currentRoute == 'logout') ? ' class="uk-active"' : '' }}><a href="{{ path_for('logout') }}">Logout</a></li>{% endif %}

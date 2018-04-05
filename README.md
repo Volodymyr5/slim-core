@@ -74,6 +74,10 @@ With method - `{{ get_site_url() }}` you can receive full path for your website 
 Use it to check if is need for you route are allowed for current user ```{% if is_route_allowed('route_name') %}{% endif %}```.
 As example to show link for protected page.
 
+6\. **is_role('GUEST') | is_role(['USER', 'ADMIN'])**
+Use it to check if is current user has need roles. You can put string or array with roles from ```\App\Libs\Acl->__construct```
+If you set wrong role name it will be skipped!
+
 ### 3. PDO wrapper for SQLite and MySQL with - `"envms/fluentpdo"`
 #### Usage:
 In `app/MVC/Models/` create class:
@@ -235,6 +239,7 @@ In ```app/Core/Libs/Acl.php``` inside ```__constructor``` use method
 ```
 $this->addAllowedRole('USER', \App\Core\Constant::ROLE_USER);
 ```
+> \App\Core\Constant::ROLE_USER - used only for convenience, you can provide any integer 
 to adding need role in your app (do it **before** call ```parent::__construct```) 
 
 In method ```rules()``` add rules for your **named** routes
