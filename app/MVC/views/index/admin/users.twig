@@ -1,0 +1,39 @@
+{% extends 'layout/main.twig' %}
+{% block content %}
+    <div class="uk-section uk-padding-remove-vertical">
+        <div class="uk-container uk-container-expand">
+            <h1 class="uk-text-center uk-medium-small uk-margin-medium-top uk-text-primary">Users list</h1>
+
+            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-middle">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Role</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.created|date('H:i:s d.m.Y') }}</td>
+                        <td>{{ user.updated|date('H:i:s d.m.Y') }}</td>
+                        <td>
+                            <a class="uk-margin-small-right" href="{{ path_for('admin-users-edit', { 'id': user.id }) }}"><i class="fas fa-lg fa-pen-square"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

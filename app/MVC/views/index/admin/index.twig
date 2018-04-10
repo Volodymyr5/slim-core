@@ -1,0 +1,12 @@
+{% extends 'layout/main.twig' %}
+{% block content %}
+    <div class="uk-section uk-padding-remove-vertical">
+        <div class="uk-container uk-container-expand">
+            <h1 class="uk-text-center uk-medium-small uk-margin-medium-top uk-text-primary">Admin main</h1>
+
+            <ul class="uk-nav uk-nav-primary uk-nav-center">
+                {% if is_route_allowed('admin-users') %}<li{{ (currentRoute == 'admin-users') ? ' class="uk-active"' : '' }}><a href="{{ path_for('admin-users') }}">Users</a></li>{% endif %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'layout/main.twig' %}
+
+{% block content %}
+    <div class="uk-section uk-padding-remove-vertical">
+        <div class="uk-container uk-container-expand">
+
+            <h1 class="uk-text-center uk-medium-small uk-margin-medium-top uk-text-primary">User edit</h1>
+
+            <div class="uk-grid-large uk-flex-center uk-margin-remove" uk-grid>
+                <div class="uk-width-1-1 uk-width-1-2@s uk-width-1-3@m uk-card uk-card-default uk-padding uk-padding-remove-top">
+
+                    <form method="POST" role="form">
+                        {{ csrf_tokens() | raw }}
+                        {{ formRow(form.get('id')) }}
+                        <div class="uk-margin">
+                            {{ formRow(form.get('email')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('first_name')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('last_name')) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ formRow(form.get('role')) }}
+                        </div>
+
+                        <div class="uk-margin uk-text-right">
+                            {{ formRow(form.get('submit')) }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

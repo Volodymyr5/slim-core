@@ -5,11 +5,11 @@
     <title>Core</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ assets('plugins/uikit/css/uikit.min.css') }}"/>
-    {#<link rel="stylesheet" href="{{ assets('css/theme.css') }}"/>#}
     <link rel="stylesheet" href="{{ assets('css/style.css') }}"/>
     <link rel="icon" href="{{ assets('images/favicon.ico') }}" />
     <script src="{{ assets('plugins/uikit/js/uikit.min.js') }}"></script>
     <script src="{{ assets('plugins/uikit/js/uikit-icons.min.js') }}"></script>
+    <script src="{{ assets('plugins/fontawesome/fontawesome-all.js') }}"></script>
 </head>
 <body>
 
@@ -18,8 +18,6 @@
 
     {% if is_role('ADMIN') %}
         {% include 'partial/admin-side-navigation.twig' %}
-    {% elseif is_role('EDITOR') %}
-        {% include 'partial/editor-side-navigation.twig' %}
     {% endif %}
     {% include 'partial/navigation.twig' %}
 

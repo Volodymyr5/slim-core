@@ -23,7 +23,6 @@ class Acl extends CoreAcl
     public function __construct(ContainerInterface $container, Request $request, Response $response)
     {
         $this->addAllowedRole('USER', Constant::ROLE_USER);
-        $this->addAllowedRole('EDITOR', Constant::ROLE_EDITOR);
         $this->addAllowedRole('ADMIN', Constant::ROLE_ADMIN);
 
         parent::__construct($container, $request, $response);
@@ -43,7 +42,9 @@ class Acl extends CoreAcl
         $this->set(self::ROUTE_ALLOW, 'logout', $this->getRoles());
         $this->set(self::ROUTE__DENY, 'logout', $this->getRoles('GUEST'));
         $this->set(self::ROUTE_ALLOW, 'set-password', $this->getRoles());
-        // Index
+        // Admin
         $this->set(self::ROUTE_ALLOW, 'admin', $this->getRoles('ADMIN'));
+        $this->set(self::ROUTE_ALLOW, 'admin-users', $this->getRoles('ADMIN'));
+        $this->set(self::ROUTE_ALLOW, 'admin-users-edit', $this->getRoles('ADMIN'));
     }
 }

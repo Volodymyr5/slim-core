@@ -2,5 +2,10 @@
     <div class="uk-offcanvas-bar">
         <button class="uk-offcanvas-close" type="button" uk-close></button>
         <h3>Adimn navigation</h3>
+
+        <ul class="uk-nav">
+            {% if is_route_allowed('admin') %}<li{{ (currentRoute == 'admin') ? ' class="uk-active"' : '' }}><a href="{{ path_for('admin') }}">Admin main</a></li>{% endif %}
+            {% if is_route_allowed('admin-users') %}<li{{ (currentRoute == 'admin-users') ? ' class="uk-active"' : '' }}><a href="{{ path_for('admin-users') }}">Users</a></li>{% endif %}
+        </ul>
     </div>
 </div>

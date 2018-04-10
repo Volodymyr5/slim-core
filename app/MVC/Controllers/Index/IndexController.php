@@ -20,24 +20,6 @@ class IndexController extends CoreController
      */
     public function index(Request $request, Response $response)
     {
-        $u = new User($this->container);
-
-        $users = $u->getAll();
-
-        return $this->view->render($response, 'index\index\index.twig', [
-            'users' => $users
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @return mixed
-     */
-    public function admin(Request $request, Response $response)
-    {
-        return $this->view->render($response, 'index\index\index.twig', [
-            'users' => 'admin'
-        ]);
+        return $this->view->render($response, 'index\index\index.twig', []);
     }
 }

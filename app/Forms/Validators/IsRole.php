@@ -2,18 +2,19 @@
 
 namespace App\Forms\Validators;
 
+use App\MVC\Models\User;
 use Zend\Validator\AbstractValidator;
 
 /**
- * Class CustomAlpha
+ * Class IsRole
  * @package App\Forms\Validators
  */
-class CustomAlpha extends AbstractValidator
+class IsRole extends AbstractValidator
 {
     const INVALID = "invalid";
 
     protected $messageTemplates = array(
-        self::INVALID => "Field must contains only characters"
+        self::INVALID => "Value is not valid Role!"
     );
 
     /**
@@ -22,11 +23,13 @@ class CustomAlpha extends AbstractValidator
      */
     public function isValid($value)
     {
-        $this->setValue($value);
+        $container = $this->getOption('container');
+        $roles = $container->acl->getRoles();
+        $roles = array_flip($roles);
 
         $isValid = true;
 
-        if (!preg_match("/^[a-zA-Zа-яА-Я- ІіЇїҐґЁё0-9]+$/usi", $value)) {
+        if (!isset($roles[$value])) {
             $this->error(self::INVALID);
             $isValid = false;
         }
