@@ -74,12 +74,18 @@ With method - `{{ get_site_url() }}` you can receive full path for your website 
 Use it to check if is need for you route are allowed for current user ```{% if is_route_allowed('route_name') %}{% endif %}```.
 As example to show link for protected page.
 
-6\. **is_role('GUEST') | is_role(['USER', 'ADMIN'])**
+7\. **is_role('GUEST') | is_role(['USER', 'ADMIN'])**
 Use it to check if is current user has need roles. You can put string or array with roles from ```\App\Libs\Acl->__construct```
 If you set wrong role name it will be skipped!
 
-6\. **is_xhr()**
+8\. **is_xhr()**
 Return ```true``` if route loaded via XHR in other case return ```false```
+
+9\. Link to modal
+Add to link ```data-target="sm-modal"``` or ```data-target="lg-modal"``` to load page by link href in small or large modals respectively
+
+10\. Ajax form
+Add to form ```ajax-form``` class and it will be processed using Ajax. You can use it in combinations with previous feature
 
 ### 3. PDO wrapper for SQLite and MySQL with - `"envms/fluentpdo"`
 #### Usage:
