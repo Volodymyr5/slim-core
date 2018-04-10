@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="{{ assets('plugins/uikit/css/uikit.min.css') }}"/>
     <link rel="stylesheet" href="{{ assets('css/style.css') }}"/>
     <link rel="icon" href="{{ assets('images/favicon.ico') }}" />
+    <script src="{{ assets('plugins/jquery/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ assets('plugins/uikit/js/uikit.min.js') }}"></script>
     <script src="{{ assets('plugins/uikit/js/uikit-icons.min.js') }}"></script>
     <script src="{{ assets('plugins/fontawesome/fontawesome-all.js') }}"></script>
+    <script src="{{ assets('js/script.js') }}"></script>
 </head>
 <body>
 
@@ -24,6 +26,20 @@
     {{ show_flash_messages() | raw }}
 
     {% block content %}{% endblock %}
+
+    <div id="lg-modal" class="uk-modal-container uk-width-auto" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <div id="sm-modal" class="uk-flex-top uk-width-auto" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

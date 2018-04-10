@@ -28,7 +28,7 @@
                         <td>{{ user.created|date('H:i:s d.m.Y') }}</td>
                         <td>{{ user.updated|date('H:i:s d.m.Y') }}</td>
                         <td>
-                            <a class="uk-margin-small-right" href="{{ path_for('admin-users-edit', { 'id': user.id }) }}"><i class="fas fa-lg fa-pen-square"></i></a>
+                            <a class="uk-margin-small-right" data-target="sm-modal" href="{{ path_for('admin-users-edit', { 'id': user.id }) }}"><i class="fas fa-lg fa-pen-square"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

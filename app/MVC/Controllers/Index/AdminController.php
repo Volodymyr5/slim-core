@@ -102,7 +102,7 @@ class AdminController extends CoreController
                             '<h3>User successfully changed!</h3>'
                         );
 
-                        return $response->withRedirect($this->router->pathFor('admin-users'));
+                        return $response->withJson(['success' => true]);
                     }
                 }
             }else {

@@ -52,3 +52,10 @@ $view->getEnvironment()->addFunction(new \Twig_Function('is_role', function () u
 
     return $result->render();
 }));
+
+// Get Is XHR Helper
+$view->getEnvironment()->addFunction(new \Twig_Function('is_xhr', function () use ($container) {
+    $result = new \App\MVC\ViewHelpers\IsXhr($container);
+
+    return $result->render();
+}));

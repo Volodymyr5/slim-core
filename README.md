@@ -78,6 +78,9 @@ As example to show link for protected page.
 Use it to check if is current user has need roles. You can put string or array with roles from ```\App\Libs\Acl->__construct```
 If you set wrong role name it will be skipped!
 
+6\. **is_xhr()**
+Return ```true``` if route loaded via XHR in other case return ```false```
+
 ### 3. PDO wrapper for SQLite and MySQL with - `"envms/fluentpdo"`
 #### Usage:
 In `app/MVC/Models/` create class:
