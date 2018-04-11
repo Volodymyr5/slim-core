@@ -10,10 +10,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 /**
- * Class ForgotPasswordController
+ * Class ChangePasswordController
  * @package App\MVC\Controllers\Auth
  */
-class ForgotPasswordController extends CoreController
+class ChangePasswordController extends CoreController
 {
     /**
      * @param Request $request
@@ -24,14 +24,14 @@ class ForgotPasswordController extends CoreController
     public function index(Request $request, Response $response)
     {
         $u = new User($this->container);
-        $form = $this->getForm('App\Forms\ForgotPasswordForm');
+        $currUser = $this->container->user->getIdentity();
 
-        if ($request->isPost()) {
+        $isAuthorized = !empty($currUser['id']);
+
+        if ($request->isPost() && $isAuthorized) {
             $data = $request->getParams();
-            $form->setData($data);
-            $isValid = $form->isValid();
-            if ($isValid) {
-                $user = $u->getByField('email', $data['email']);
+            if (!empty($data['change'])) {
+                $user = $u->getByField('id', $currUser['id']);
 
                 if (!empty($user['id'])) {
                     $ue = new UserEntity();
@@ -52,8 +52,8 @@ class ForgotPasswordController extends CoreController
                     try {
                         $this->sendMail([
                             'to' => $user['email'],
-                            'subject' => 'Hello' . $userFullName . '! We received Password reset request. ' . $projectName,
-                            'body' => $this->getEmailBody('emails\forgot_password.twig', [
+                            'subject' => 'Hello' . $userFullName . '! We received Password changing request. ' . $projectName,
+                            'body' => $this->getEmailBody('emails\change_password.twig', [
                                 'password_token' => $ue->getPasswordToken()
                             ]),
                             'from_name' => 'No reply'
@@ -61,11 +61,11 @@ class ForgotPasswordController extends CoreController
 
                         $this->container->flash->addMessage(
                             'alert-success',
-                            '<h3>We\'ve sent you an email with a confirmation link.</h3>' .
-                            '<p>Use it to restore your password.</p>'
+                            '<h3>We\'ve sent you an email with link.</h3>' .
+                            '<p>Use it to change your password.</p>'
                         );
 
-                        return $response->withRedirect($this->router->pathFor('forgot-password'));
+                        return $response->withRedirect($this->router->pathFor('change-password'));
                     } catch (\Exception $e) {
                         Logger::log($e->getMessage());
                     }
@@ -73,8 +73,8 @@ class ForgotPasswordController extends CoreController
             }
         }
 
-        return $this->view->render($response, 'auth\forgot-password\index.twig', [
-            'form' => $form
+        return $this->view->render($response, 'auth\change-password\index.twig', [
+            'isAuthorized' => $isAuthorized
         ]);
     }
 }

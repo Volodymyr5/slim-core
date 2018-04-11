@@ -104,8 +104,8 @@ class CoreController
         $params['attachments'] = !empty($params['attachments']) ? $params['attachments'] : [];
         $params['attachments'] = (is_string($params['attachments'])) ? [$params['attachments']] : $params['attachments'];
 
-        \App\Core\Libs\Logger::log($params);
-        return true;
+        /*\App\Core\Libs\Logger::log($params);
+        return true;*/
 
         if ($params['to'] && $params['subject'] && $params['body']) {
             $mailer = $this->getMailer($params['from_name']);

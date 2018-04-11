@@ -1,0 +1,27 @@
+{% extends 'layout/main.twig' %}
+
+{% block content %}
+    <div class="uk-section uk-padding-remove-vertical">
+        <div class="uk-container uk-container-expand">
+
+            {% if isAuthorized %}
+            <h1 class="uk-text-center uk-medium-small uk-margin-medium-top uk-text-primary">Change password</h1>
+
+            <div class="uk-grid-large uk-flex-center uk-margin-remove" uk-grid>
+                <div class="uk-margin uk-text-center">
+                    <p>After pressing button we will send you link on your email, for changing password.</p>
+
+                    <form method="POST" role="form">
+                        {{ csrf_tokens() | raw }}
+
+                        <input type="submit" name="change" class="uk-button uk-button-primary" value="Change">
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <h1 class="uk-text-center uk-medium-small uk-margin-medium-top uk-text-primary">Changing password not allowed for non authorized user!</h1>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

@@ -23,12 +23,16 @@ class UniqueEmailInDB extends AbstractValidator
      */
     public function isValid($value)
     {
-        $ignoreSelf = $this->getOption('ignore_self', null);
+        $options = $this->getOptions();
+        $ignoreSelf = isset($options['ignore_self']) ? $options['ignore_self'] : null;
+        $container = isset($options['container']) ? $options['container'] : null;
+
+        $u = new User($container);
+
         if ($ignoreSelf) {
-            $id = $this->getOption('container')->get('request')->getParam('id', null);
+            $id = $container->get('request')->getParam('id', null);
             $id = (is_numeric($id) && $id > 0) ? $id : null;
 
-            $u = new User($this->getOption('container'));
             $user = $id ? $u->getByField('id', $id) : null;
             $user = isset($user['id']) ? $user : null;
         }

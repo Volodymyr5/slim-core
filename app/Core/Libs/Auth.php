@@ -114,11 +114,7 @@ class Auth
         $token = $this->getTokenFromCookie();
         $lastSession = $this->getNeedSession($token);
         if ($lastSession) {
-            $te = new TokenEntity();
-            $te->setId($lastSession['id']);
-            $te->setUserId('');
-
-            $t->modify($te);
+            $this->updateTokenInDB($token, true, true);
         }
         $this->setUserIdentityInSession(null);
 
@@ -185,7 +181,6 @@ class Auth
     private function updateTokenInDB($oldToken, $clearUser = false, $newSession = false)
     {
         $t = new Token($this->container);
-        $u = new User($this->container);
 
         $newToken = $this->createNewToken($oldToken);
 

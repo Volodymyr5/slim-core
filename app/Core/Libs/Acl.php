@@ -38,6 +38,8 @@ class Acl extends CoreAcl
         // Auth
         $this->set(self::ROUTE_ALLOW, 'login', $this->getRoles('GUEST'));
         $this->set(self::ROUTE_ALLOW, 'forgot-password', $this->getRoles('GUEST'));
+        $this->set(self::ROUTE_ALLOW, 'change-password', $this->getRoles());
+        $this->set(self::ROUTE__DENY, 'change-password', $this->getRoles('GUEST'));
         $this->set(self::ROUTE_ALLOW, 'register', $this->getRoles('GUEST'));
         $this->set(self::ROUTE_ALLOW, 'logout', $this->getRoles());
         $this->set(self::ROUTE__DENY, 'logout', $this->getRoles('GUEST'));
